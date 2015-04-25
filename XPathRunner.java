@@ -6,7 +6,7 @@ import java.util.*;
 public class XPathRunner{
     public static void main(String[] args) throws Exception {
     // create a CharStream that reads from standard input
-    ANTLRInputStream input = new ANTLRInputStream(System.in);
+    ANTLRInputStream input = new ANTLRInputStream(System.in); //"document(\"j_caesar.xml\")/TITLE");
 
     // create a lexer that feeds off of input CharStream
     x_path_grammarLexer lexer = new x_path_grammarLexer(input);
@@ -22,7 +22,9 @@ public class XPathRunner{
 
     EvalVisitor eval = new EvalVisitor();
 
-    ArrayList<Node> result=eval.visit(tree);
+    ArrayList<Node> result=new ArrayList<Node>();
+    if (eval.visit(tree)!=null)
+        result=eval.visit(tree);
 
     System.out.println(result.size());
     for(int i=0;i<result.size();i++){
