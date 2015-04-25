@@ -145,17 +145,37 @@ public class x_path_grammarParser extends Parser {
 	}
 
 	public static class ApContext extends ParserRuleContext {
-		public TerminalNode File_name() { return getToken(x_path_grammarParser.File_name, 0); }
-		public RpContext rp() {
-			return getRuleContext(RpContext.class,0);
-		}
 		public ApContext(ParserRuleContext parent, int invokingState) {
 			super(parent, invokingState);
 		}
 		@Override public int getRuleIndex() { return RULE_ap; }
+	 
+		public ApContext() { }
+		public void copyFrom(ApContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class ApSlashContext extends ApContext {
+		public TerminalNode File_name() { return getToken(x_path_grammarParser.File_name, 0); }
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public ApSlashContext(ApContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitAp(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitApSlash(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ApDeepContext extends ApContext {
+		public TerminalNode File_name() { return getToken(x_path_grammarParser.File_name, 0); }
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public ApDeepContext(ApContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitApDeep(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -167,6 +187,7 @@ public class x_path_grammarParser extends Parser {
 			setState(24);
 			switch ( getInterpreter().adaptivePredict(_input,1,_ctx) ) {
 			case 1:
+				_localctx = new ApSlashContext(_localctx);
 				enterOuterAlt(_localctx, 1);
 				{
 				setState(12);
@@ -184,6 +205,7 @@ public class x_path_grammarParser extends Parser {
 				}
 				break;
 			case 2:
+				_localctx = new ApDeepContext(_localctx);
 				enterOuterAlt(_localctx, 2);
 				{
 				setState(18);
@@ -214,23 +236,130 @@ public class x_path_grammarParser extends Parser {
 	}
 
 	public static class RpContext extends ParserRuleContext {
+		public RpContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
+		}
+		@Override public int getRuleIndex() { return RULE_rp; }
+	 
+		public RpContext() { }
+		public void copyFrom(RpContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class RpCondContext extends RpContext {
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public FContext f() {
+			return getRuleContext(FContext.class,0);
+		}
+		public RpCondContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpCond(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpPlainContext extends RpContext {
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public RpPlainContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpPlain(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpTagContext extends RpContext {
 		public TerminalNode Tagname() { return getToken(x_path_grammarParser.Tagname, 0); }
+		public RpTagContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpTag(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpNextContext extends RpContext {
 		public List<RpContext> rp() {
 			return getRuleContexts(RpContext.class);
 		}
 		public RpContext rp(int i) {
 			return getRuleContext(RpContext.class,i);
 		}
-		public FContext f() {
-			return getRuleContext(FContext.class,0);
-		}
-		public RpContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_rp; }
+		public RpNextContext(RpContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRp(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpNext(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpParentContext extends RpContext {
+		public RpParentContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpParent(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpDeepContext extends RpContext {
+		public List<RpContext> rp() {
+			return getRuleContexts(RpContext.class);
+		}
+		public RpContext rp(int i) {
+			return getRuleContext(RpContext.class,i);
+		}
+		public RpDeepContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpDeep(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpStarContext extends RpContext {
+		public RpStarContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpStar(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpCurrentContext extends RpContext {
+		public RpCurrentContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpCurrent(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpTestContext extends RpContext {
+		public RpTestContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpTest(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpIndContext extends RpContext {
+		public List<RpContext> rp() {
+			return getRuleContexts(RpContext.class);
+		}
+		public RpContext rp(int i) {
+			return getRuleContext(RpContext.class,i);
+		}
+		public RpIndContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpInd(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpAttrContext extends RpContext {
+		public TerminalNode Tagname() { return getToken(x_path_grammarParser.Tagname, 0); }
+		public RpAttrContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpAttr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -254,36 +383,55 @@ public class x_path_grammarParser extends Parser {
 			switch (_input.LA(1)) {
 			case Tagname:
 				{
+				_localctx = new RpTagContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+
 				setState(27);
 				match(Tagname);
 				}
 				break;
 			case T__5:
 				{
+				_localctx = new RpStarContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(28);
 				match(T__5);
 				}
 				break;
 			case T__6:
 				{
+				_localctx = new RpCurrentContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(29);
 				match(T__6);
 				}
 				break;
 			case T__7:
 				{
+				_localctx = new RpParentContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(30);
 				match(T__7);
 				}
 				break;
 			case T__8:
 				{
+				_localctx = new RpTestContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(31);
 				match(T__8);
 				}
 				break;
 			case T__1:
 				{
+				_localctx = new RpPlainContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(32);
 				match(T__1);
 				setState(33);
@@ -294,6 +442,9 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case T__12:
 				{
+				_localctx = new RpAttrContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(36);
 				match(T__12);
 				setState(37);
@@ -316,7 +467,7 @@ public class x_path_grammarParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,3,_ctx) ) {
 					case 1:
 						{
-						_localctx = new RpContext(_parentctx, _parentState);
+						_localctx = new RpNextContext(new RpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_rp);
 						setState(40);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
@@ -328,7 +479,7 @@ public class x_path_grammarParser extends Parser {
 						break;
 					case 2:
 						{
-						_localctx = new RpContext(_parentctx, _parentState);
+						_localctx = new RpDeepContext(new RpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_rp);
 						setState(43);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
@@ -340,7 +491,7 @@ public class x_path_grammarParser extends Parser {
 						break;
 					case 3:
 						{
-						_localctx = new RpContext(_parentctx, _parentState);
+						_localctx = new RpIndContext(new RpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_rp);
 						setState(46);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
@@ -352,7 +503,7 @@ public class x_path_grammarParser extends Parser {
 						break;
 					case 4:
 						{
-						_localctx = new RpContext(_parentctx, _parentState);
+						_localctx = new RpCondContext(new RpContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_rp);
 						setState(49);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
@@ -385,26 +536,114 @@ public class x_path_grammarParser extends Parser {
 	}
 
 	public static class FContext extends ParserRuleContext {
-		public List<FContext> f() {
-			return getRuleContexts(FContext.class);
+		public FContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
 		}
-		public FContext f(int i) {
-			return getRuleContext(FContext.class,i);
+		@Override public int getRuleIndex() { return RULE_f; }
+	 
+		public FContext() { }
+		public void copyFrom(FContext ctx) {
+			super.copyFrom(ctx);
 		}
+	}
+	public static class FIsContext extends FContext {
 		public List<RpContext> rp() {
 			return getRuleContexts(RpContext.class);
 		}
 		public RpContext rp(int i) {
 			return getRuleContext(RpContext.class,i);
 		}
-		public TerminalNode Attr_Data() { return getToken(x_path_grammarParser.Attr_Data, 0); }
-		public FContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_f; }
+		public FIsContext(FContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitF(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFIs(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FNotContext extends FContext {
+		public FContext f() {
+			return getRuleContext(FContext.class,0);
+		}
+		public FNotContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFNot(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FEqContext extends FContext {
+		public List<RpContext> rp() {
+			return getRuleContexts(RpContext.class);
+		}
+		public RpContext rp(int i) {
+			return getRuleContext(RpContext.class,i);
+		}
+		public FEqContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFEq(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FValContext extends FContext {
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public TerminalNode Attr_Data() { return getToken(x_path_grammarParser.Attr_Data, 0); }
+		public FValContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFVal(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FRpContext extends FContext {
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public FRpContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFRp(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FIndContext extends FContext {
+		public FContext f() {
+			return getRuleContext(FContext.class,0);
+		}
+		public FIndContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFInd(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FOrContext extends FContext {
+		public List<FContext> f() {
+			return getRuleContexts(FContext.class);
+		}
+		public FContext f(int i) {
+			return getRuleContext(FContext.class,i);
+		}
+		public FOrContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFOr(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FAndContext extends FContext {
+		public List<FContext> f() {
+			return getRuleContexts(FContext.class);
+		}
+		public FContext f(int i) {
+			return getRuleContext(FContext.class,i);
+		}
+		public FAndContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFAnd(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -428,6 +667,10 @@ public class x_path_grammarParser extends Parser {
 			switch ( getInterpreter().adaptivePredict(_input,5,_ctx) ) {
 			case 1:
 				{
+				_localctx = new FNotContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+
 				setState(60);
 				match(T__19);
 				setState(61);
@@ -436,12 +679,18 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case 2:
 				{
+				_localctx = new FRpContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(62);
 				rp(0);
 				}
 				break;
 			case 3:
 				{
+				_localctx = new FEqContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(63);
 				rp(0);
 				setState(64);
@@ -452,6 +701,9 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case 4:
 				{
+				_localctx = new FEqContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(67);
 				rp(0);
 				setState(68);
@@ -462,6 +714,9 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case 5:
 				{
+				_localctx = new FIsContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(71);
 				rp(0);
 				setState(72);
@@ -472,6 +727,9 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case 6:
 				{
+				_localctx = new FIsContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(75);
 				rp(0);
 				setState(76);
@@ -482,6 +740,9 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case 7:
 				{
+				_localctx = new FIndContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(79);
 				match(T__1);
 				setState(80);
@@ -492,6 +753,9 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case 8:
 				{
+				_localctx = new FValContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(83);
 				rp(0);
 				setState(84);
@@ -514,7 +778,7 @@ public class x_path_grammarParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,6,_ctx) ) {
 					case 1:
 						{
-						_localctx = new FContext(_parentctx, _parentState);
+						_localctx = new FAndContext(new FContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_f);
 						setState(89);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
@@ -526,7 +790,7 @@ public class x_path_grammarParser extends Parser {
 						break;
 					case 2:
 						{
-						_localctx = new FContext(_parentctx, _parentState);
+						_localctx = new FOrContext(new FContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_f);
 						setState(92);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
