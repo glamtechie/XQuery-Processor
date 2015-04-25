@@ -17,11 +17,19 @@ public class XPathRunner{
     x_path_grammarParser parser=new x_path_grammarParser(tokens);
     ParseTree tree = parser.r();
 
-    String filename="";
-    DomTree domtree=new DomTree(filename);
+    //String filename="";
+    //DomTree domtree=new DomTree(filename);
 
-    EvalVisitor eval = new EvalVisitor(domtree);
+    EvalVisitor eval = new EvalVisitor();
 
     ArrayList<Node> result=eval.visit(tree);
+
+    System.out.println(result.size());
+    for(int i=0;i<result.size();i++){
+        if (result.get(i) instanceof Element){
+            Element n=(Element) result.get(i);
+            System.out.println(n.getTextContent());
+        }
+    }
 }
 }
