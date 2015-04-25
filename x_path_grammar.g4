@@ -27,7 +27,6 @@ f : rp              #fRp
     | rp '=' Attr_Data #fVal
     ;
 Attr_Data : [^'"][_A-Za-z0-9-."' ]* ;
-Tagname : [^_A-Za-z'"][_A-Za-z0-9-."' ]* ;
+Tagname : [^_A-Za-z'"][_A-Za-z0-9-.]* ;
 File_name : [A-Za-z._-]+ ;
 WS: [\t\r\n ]+ -> skip;
-
