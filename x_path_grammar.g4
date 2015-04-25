@@ -1,7 +1,7 @@
 grammar x_path_grammar;
 r : ap|rp;
-ap : 'doc''('File_name')''/'rp  #apSlash
-    | 'doc''('File_name')''//'rp    #apDeep
+ap : 'doc(' Tagname ')/' rp  #apSlash
+    | 'doc(' Tagname ')//' rp    #apDeep
     ;
 rp : Tagname        #rpTag
     | '*'           #rpStar
