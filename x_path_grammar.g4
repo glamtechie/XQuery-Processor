@@ -7,22 +7,22 @@ rp : Tagname        #rpTag
     | '*'           #rpStar
     | '.'           #rpCurrent
     | '..'          #rpParent
-    | 'text()'      #rpTest
+    | 'text()'      #rpText
     | '('rp')'      #rpPlain
-    | rp'/'rp       #rpNext
-    | rp'//'rp      #rpDeep
+    | left=rp '/' right=rp       #rpNext
+    | left=rp '//' right=rp      #rpDeep
     | rp'['f']'     #rpCond
-    | rp',' rp      #rpInd
+    | left=rp ',' right=rp      #rpInd
     | '@'Tagname    #rpAttr
     ;
 f : rp              #fRp
-    | rp '=' rp     #fEq
-    | rp 'eq' rp    #fEq
-    | rp '==' rp    #fIs
-    | rp 'is' rp    #fIs
+    | left=rp '=' right=rp     #fEq
+    | left=rp 'eq' right=rp    #fEq
+    | left=rp '==' right=rp    #fIs
+    | left=rp 'is' right=rp    #fIs
     | '('f')'       #fInd
-    | f 'and' f     #fAnd
-    | f 'or' f      #fOr
+    | left=f 'and' right=f     #fAnd
+    | left=f 'or' right=f      #fOr
     | 'not' f       #fNot
     | rp '=' Attr_Data #fVal
     ;

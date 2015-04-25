@@ -246,6 +246,14 @@ public class x_path_grammarParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
+	public static class RpTextContext extends RpContext {
+		public RpTextContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpText(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class RpCondContext extends RpContext {
 		public RpContext rp() {
 			return getRuleContext(RpContext.class,0);
@@ -281,6 +289,8 @@ public class x_path_grammarParser extends Parser {
 		}
 	}
 	public static class RpNextContext extends RpContext {
+		public RpContext left;
+		public RpContext right;
 		public List<RpContext> rp() {
 			return getRuleContexts(RpContext.class);
 		}
@@ -303,6 +313,8 @@ public class x_path_grammarParser extends Parser {
 		}
 	}
 	public static class RpDeepContext extends RpContext {
+		public RpContext left;
+		public RpContext right;
 		public List<RpContext> rp() {
 			return getRuleContexts(RpContext.class);
 		}
@@ -332,15 +344,9 @@ public class x_path_grammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class RpTestContext extends RpContext {
-		public RpTestContext(RpContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpTest(this);
-			else return visitor.visitChildren(this);
-		}
-	}
 	public static class RpIndContext extends RpContext {
+		public RpContext left;
+		public RpContext right;
 		public List<RpContext> rp() {
 			return getRuleContexts(RpContext.class);
 		}
@@ -420,7 +426,7 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case T__8:
 				{
-				_localctx = new RpTestContext(_localctx);
+				_localctx = new RpTextContext(_localctx);
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(31);
@@ -468,37 +474,40 @@ public class x_path_grammarParser extends Parser {
 					case 1:
 						{
 						_localctx = new RpNextContext(new RpContext(_parentctx, _parentState));
+						((RpNextContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_rp);
 						setState(40);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(41);
 						match(T__3);
 						setState(42);
-						rp(6);
+						((RpNextContext)_localctx).right = rp(6);
 						}
 						break;
 					case 2:
 						{
 						_localctx = new RpDeepContext(new RpContext(_parentctx, _parentState));
+						((RpDeepContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_rp);
 						setState(43);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(44);
 						match(T__4);
 						setState(45);
-						rp(5);
+						((RpDeepContext)_localctx).right = rp(5);
 						}
 						break;
 					case 3:
 						{
 						_localctx = new RpIndContext(new RpContext(_parentctx, _parentState));
+						((RpIndContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_rp);
 						setState(46);
 						if (!(precpred(_ctx, 2))) throw new FailedPredicateException(this, "precpred(_ctx, 2)");
 						setState(47);
 						match(T__11);
 						setState(48);
-						rp(3);
+						((RpIndContext)_localctx).right = rp(3);
 						}
 						break;
 					case 4:
@@ -547,6 +556,8 @@ public class x_path_grammarParser extends Parser {
 		}
 	}
 	public static class FIsContext extends FContext {
+		public RpContext left;
+		public RpContext right;
 		public List<RpContext> rp() {
 			return getRuleContexts(RpContext.class);
 		}
@@ -572,6 +583,8 @@ public class x_path_grammarParser extends Parser {
 		}
 	}
 	public static class FEqContext extends FContext {
+		public RpContext left;
+		public RpContext right;
 		public List<RpContext> rp() {
 			return getRuleContexts(RpContext.class);
 		}
@@ -620,6 +633,8 @@ public class x_path_grammarParser extends Parser {
 		}
 	}
 	public static class FOrContext extends FContext {
+		public FContext left;
+		public FContext right;
 		public List<FContext> f() {
 			return getRuleContexts(FContext.class);
 		}
@@ -634,6 +649,8 @@ public class x_path_grammarParser extends Parser {
 		}
 	}
 	public static class FAndContext extends FContext {
+		public FContext left;
+		public FContext right;
 		public List<FContext> f() {
 			return getRuleContexts(FContext.class);
 		}
@@ -692,11 +709,11 @@ public class x_path_grammarParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(63);
-				rp(0);
+				((FEqContext)_localctx).left = rp(0);
 				setState(64);
 				match(T__13);
 				setState(65);
-				rp(0);
+				((FEqContext)_localctx).right = rp(0);
 				}
 				break;
 			case 4:
@@ -705,11 +722,11 @@ public class x_path_grammarParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(67);
-				rp(0);
+				((FEqContext)_localctx).left = rp(0);
 				setState(68);
 				match(T__14);
 				setState(69);
-				rp(0);
+				((FEqContext)_localctx).right = rp(0);
 				}
 				break;
 			case 5:
@@ -718,11 +735,11 @@ public class x_path_grammarParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(71);
-				rp(0);
+				((FIsContext)_localctx).left = rp(0);
 				setState(72);
 				match(T__15);
 				setState(73);
-				rp(0);
+				((FIsContext)_localctx).right = rp(0);
 				}
 				break;
 			case 6:
@@ -731,11 +748,11 @@ public class x_path_grammarParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(75);
-				rp(0);
+				((FIsContext)_localctx).left = rp(0);
 				setState(76);
 				match(T__16);
 				setState(77);
-				rp(0);
+				((FIsContext)_localctx).right = rp(0);
 				}
 				break;
 			case 7:
@@ -779,25 +796,27 @@ public class x_path_grammarParser extends Parser {
 					case 1:
 						{
 						_localctx = new FAndContext(new FContext(_parentctx, _parentState));
+						((FAndContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_f);
 						setState(89);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
 						setState(90);
 						match(T__17);
 						setState(91);
-						f(5);
+						((FAndContext)_localctx).right = f(5);
 						}
 						break;
 					case 2:
 						{
 						_localctx = new FOrContext(new FContext(_parentctx, _parentState));
+						((FOrContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_f);
 						setState(92);
 						if (!(precpred(_ctx, 3))) throw new FailedPredicateException(this, "precpred(_ctx, 3)");
 						setState(93);
 						match(T__18);
 						setState(94);
-						f(4);
+						((FOrContext)_localctx).right = f(4);
 						}
 						break;
 					}

@@ -31,6 +31,13 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitApDeep(x_path_grammarParser.ApDeepContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code rpText}
+	 * labeled alternative in {@link x_path_grammarParser#rp}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRpText(x_path_grammarParser.RpTextContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code rpCond}
 	 * labeled alternative in {@link x_path_grammarParser#rp}.
 	 * @param ctx the parse tree
@@ -86,13 +93,6 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitRpCurrent(x_path_grammarParser.RpCurrentContext ctx);
-	/**
-	 * Visit a parse tree produced by the {@code rpTest}
-	 * labeled alternative in {@link x_path_grammarParser#rp}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitRpTest(x_path_grammarParser.RpTestContext ctx);
 	/**
 	 * Visit a parse tree produced by the {@code rpInd}
 	 * labeled alternative in {@link x_path_grammarParser#rp}.
