@@ -16,7 +16,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         //this.tree=tree;
     }
 
-    //todo
+    //Absolute
+    //document("filename")/rp
     @Override
     public ArrayList<Node> visitApSlash(x_path_grammarParser.ApSlashContext ctx){
         String filename=ctx.tag.getText();
@@ -28,6 +29,9 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return visit(ctx.rp());
     }
 
+
+    //Relative
+    //rp/rp
     @Override
     public ArrayList<Node> visitRpNext(x_path_grammarParser.RpNextContext ctx){
         ArrayList<Node> curr=visit(ctx.left);
@@ -36,6 +40,114 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return visit(ctx.right);
     }
 
+    //.
+    @Override
+    public ArrayList<Node> visitRpCurrent(x_path_grammarParser.RpCurrentContext ctx){
+        ArrayList<Node> curr=stack.pop();
+        return curr;
+    }
+
+    //..
+    @Override
+    public ArrayList<Node> visitRpParent(x_path_grammarParser.RpParentContext ctx){
+        ArrayList<Node> curr=stack.pop();
+        ArrayList<Node> result=new ArrayList<Node>();
+        for(int i=0;i<curr.size();i++){
+
+            result.add(curr.get(i).getParentNode());
+
+        }
+        return result;
+    }
+
+    //text()
+    @Override
+    public ArrayList<Node> visitRpText(x_path_grammarParser.RpTextContext ctx){
+        ArrayList<Node> curr=stack.pop();
+        ArrayList<Node> result=new ArrayList<Node>();
+        for(int i=0;i<curr.size();i++){
+            NodeList list=curr.get(i).getChildNodes();
+            for(int j=0; j<list.getLength(); j++){
+                Node node = list.item(j);
+                if(node instanceof Text){
+                    result.add(node);
+                }
+            }
+        }
+        return result;
+    }
+
+    //(rp)
+    @Override
+    public ArrayList<Node> visitRpPlain(x_path_grammarParser.RpPlainContext ctx){
+        return visit(ctx.rp());
+    }
+
+    //rp1,rp2
+    @Override
+    public ArrayList<Node> visitRpInd(x_path_grammarParser.RpIndContext ctx){
+        ArrayList<Node> result=new ArrayList<Node>();
+        ArrayList<Node> temp=visit(ctx.left);
+        result.addAll(temp);
+        temp=visit(ctx.right);
+        result.addAll(temp);
+        return result;
+    }
+
+    //rp'['f']'
+    @Override
+    public ArrayList<Node> visitRpCond(x_path_grammarParser.RpCondContext ctx){
+        ArrayList<Node> curr=visit(ctx.rp());
+        ArrayList<Node> result=new ArrayList<Node>();
+
+        for(int i=0;i<curr.size();i++){
+            ArrayList<Node> temp=new ArrayList<Node>();
+            temp.add(curr.get(i));
+            stack.push(temp);
+            if(visit(ctx.f()).size()>0){
+                result.add(curr.get(i));
+            }
+
+        }
+        return result;
+    }
+
+    //@Attr
+    @Override
+    public ArrayList<Node> visitRpAttr(x_path_grammarParser.RpAttrContext ctx){
+        ArrayList<Node> curr=stack.pop();
+        ArrayList<Node> result=new ArrayList<Node>();
+        for(int i=0;i<curr.size();i++){
+            if (curr.get(i).hasAttributes()){
+                Node n=curr.get(i).getAttributes().getNamedItem(ctx.Tagname().getText());
+                if (n!=null){
+                    result.add(n);
+                }
+            }
+        }
+        return result;
+    }
+
+
+
+    //*
+    @Override
+    public ArrayList<Node> visitRpStar(x_path_grammarParser.RpStarContext ctx){
+        ArrayList<Node> curr=stack.pop();
+        ArrayList<Node> result=new ArrayList<Node>();
+        for(int i=0;i<curr.size();i++){
+            NodeList list=curr.get(i).getChildNodes();
+            for(int j=0; j<list.getLength(); j++){
+                Node node = list.item(j);
+                if(node instanceof Element){
+                    result.add(node);
+                }
+            }
+        }
+        return result;
+    }
+
+    //tagname
     @Override
     public ArrayList<Node> visitRpTag(x_path_grammarParser.RpTagContext ctx){
         ArrayList<Node> curr;
@@ -62,6 +174,52 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         }
         System.out.println("Tag");
         return result;
+    }
+
+    //Filter
+    //ensure always for a single node
+    //rp
+    @Override
+    public ArrayList<Node> visitFRp(x_path_grammarParser.FRpContext ctx){
+        return visit(ctx.rp());
+    }
+
+    //(f)
+    @Override
+    public ArrayList<Node> visitFInd(x_path_grammarParser.FIndContext ctx){
+        return visit(ctx.f());
+    }
+
+    @Override
+    public ArrayList<Node> visitFNot(x_path_grammarParser.FNotContext ctx){
+        ArrayList<Node> res=visit(ctx.f());
+        if(res.size()>0){
+            return (new ArrayList<Node>());
+        }
+        res.add(tree.root);
+        return res;
+    }
+
+    @Override
+    public ArrayList<Node> visitFOr(x_path_grammarParser.FOrContext ctx){
+        ArrayList<Node> f1=visit(ctx.left);
+        ArrayList<Node> f2=visit(ctx.right);
+        if(f1.size()>0 || f2.size()>0){
+            return (new ArrayList<Node>());
+        }
+        f1.add(tree.root);
+        return f1;
+    }
+
+    @Override
+    public ArrayList<Node> visitFAnd(x_path_grammarParser.FAndContext ctx){
+        ArrayList<Node> f1=visit(ctx.left);
+        ArrayList<Node> f2=visit(ctx.right);
+        if(f1.size()>0 && f2.size()>0){
+            return (new ArrayList<Node>());
+        }
+        f1.add(tree.root);
+        return f1;
     }
 
 }
