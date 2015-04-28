@@ -2,11 +2,11 @@ grammar x_query_grammar;
 
 r : XQ ;
 
-ap : 'document("' tag=Tagname '")/' rp   #apSlash 
-   | 'document("' tag=Tagname '")//' rp  #apDeep 
+ap : 'document("' tag=ID '")/' rp   #apSlash 
+   | 'document("' tag=ID '")//' rp  #apDeep 
    ;
 
-rp : Tagname        #rpTag
+rp : ID        #rpTag
    | '*'           #rpStar
    | '.'           #rpCurrent
    | '..'          #rpParent
@@ -16,7 +16,7 @@ rp : Tagname        #rpTag
    | left=rp '//' right=rp      #rpDeep
    | rp'['f']'     #rpCond
    | left=rp ',' right=rp      #rpInd
-   | '@'Tagname    #rpAttr
+   | '@'ID    #rpAttr
    ;
 
 f : rp              #fRp
@@ -32,29 +32,21 @@ f : rp              #fRp
    ;
 
 XQ : Var
-   | Tagname
+   | ID
    | ap
    | '(' XQ ')' 
    | XQ ',' XQ 
    | XQ '/' rp
-   | '<' Tagname '>{' XQ '}</' Tagname '>'
-   | forClause letClause whereClause returnClause
+   | '<' ID '>{' XQ '}</' ID '>'
+   | forClause (letClause)? (whereClause)? returnClause
    | letClause XQ
    ;
 
-forClause : 'for' IntermediateClause ; 
+forClause : 'for' Var 'in' XQ (',' Var 'in' XQ)* ;
 
-IntermediateClause : Var 'in' XQ 
-		   | IntermediateClause ',' IntermediateClause
-                   ; 
+letClause : 'let' Var ':=' XQ (',' Var ':=' XQ)* ;
 
-letClause : ('let' letIntermediateClause)? ;
-
-letIntermediateClause : Var ':=' XQ 
-                   | letIntermediateClause ',' letIntermediateClause
-                   ;
-			
-whereClause : ('where' Cond)? ; 
+whereClause : 'where' Cond ; 
 
 returnClause : 'return' XQ ; 
 
@@ -63,21 +55,19 @@ Cond : XQ '=' XQ
      | XQ '==' XQ 
      | XQ 'is' XQ
      | 'empty(' XQ ')'
-     | someClause 
+     | 'some' Var 'in' XQ (',' Var 'in' XQ)* 'satisfies' Cond 
      | '(' Cond ')' 
      | Cond 'and' Cond 
      | Cond 'or' Cond 
      | 'not' Cond
      ;
 
-someClause : 'some' IntermediateClause 'satisfies' Cond ;
-
 Attr_Data : [^'"][_A-Za-z0-9-."' ]* ;
 
-Tagname : [^_A-Za-z][_A-Za-z0-9-.]* ;
+ID : [^_A-Za-z][_A-Za-z0-9-]* ;
 
-File_name : [A-Za-z._-]+ ;
+File_name : ID('.'ID)* ;
 
-Var : '$' Tagname ;
+Var : '$' ID ;
 
 WS: [\t\r\n ]+ -> skip;
