@@ -29,6 +29,36 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return visit(ctx.rp());
     }
 
+    @Override
+    public ArrayList<Node> visitApDeep(x_path_grammarParser.ApDeepContext ctx){
+        String filename = ctx.tag.getText();
+        tree = new DomTree(filename);
+
+        ArrayList<Node> nodes = new ArrayList<Node>();
+
+        Stack <Node> sdfs = new Stack <Node>();
+        sdfs.push (tree.root);
+
+        // Perform DFS - Center, Left, Right order.
+        while (!sdfs.isEmpty()) {
+          Node node = sdfs.pop();
+
+          // Add this node to be visited.
+          nodes.add (node);
+          System.out.println ("Adding node during dfs: %s");
+
+          // Add all the children of this node to the DFS stack so that they can be added for visiting
+          NodeList children = node.getChildNodes();
+
+          for (int i = children.getLength() - 1; i >=0 ; i--) {
+            sdfs.push (children.item (i));
+          }
+        }
+
+        stack.push (nodes);
+        return visit (ctx.rp());
+    }
+
 
     //Relative
     //rp/rp
