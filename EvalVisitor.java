@@ -87,8 +87,10 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitRpInd(x_path_grammarParser.RpIndContext ctx){
         ArrayList<Node> result=new ArrayList<Node>();
+        ArrayList<Node> curr=stack.peek();
         ArrayList<Node> temp=visit(ctx.left);
         result.addAll(temp);
+        stack.push(curr);
         temp=visit(ctx.right);
         result.addAll(temp);
         return result;
@@ -107,7 +109,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             if(visit(ctx.f()).size()>0){
                 result.add(curr.get(i));
             }
-
+            stack.pop();
         }
         return result;
     }
@@ -202,8 +204,11 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitFOr(x_path_grammarParser.FOrContext ctx){
+        ArrayList<Node> curr=stack.peek();
         ArrayList<Node> f1=visit(ctx.left);
+        stack.push(curr);
         ArrayList<Node> f2=visit(ctx.right);
+        stack.push(curr);
         if(f1.size()>0 || f2.size()>0){
             return (new ArrayList<Node>());
         }
@@ -213,13 +218,52 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitFAnd(x_path_grammarParser.FAndContext ctx){
+        ArrayList<Node> curr=stack.peek();
         ArrayList<Node> f1=visit(ctx.left);
+        stack.push(curr);
         ArrayList<Node> f2=visit(ctx.right);
+        stack.push(curr);
         if(f1.size()>0 && f2.size()>0){
             return (new ArrayList<Node>());
         }
         f1.add(tree.root);
         return f1;
+    }
+
+    @Override
+    public ArrayList<Node> visitFIs(x_path_grammarParser.FIsContext ctx){
+        ArrayList<Node> curr=stack.peek();
+        ArrayList<Node> f1=visit(ctx.left);
+        for(Node n:f1){
+            stack.push(curr);
+            ArrayList<Node> f2=visit(ctx.right);
+            for (Node t:f2){
+                if(n.isSameNode(t)){
+                    ArrayList<Node> result=new ArrayList<Node>();
+                    result.add(t);
+                    return result;
+                }
+            }
+        }
+        return (new ArrayList<Node>());
+    }
+
+    @Override
+    public ArrayList<Node> visitFEq(x_path_grammarParser.FEqContext ctx){
+        ArrayList<Node> curr=stack.peek();
+        ArrayList<Node> f1=visit(ctx.left);
+        for(Node n:f1){
+            stack.push(curr);
+            ArrayList<Node> f2=visit(ctx.right);
+            for (Node t:f2){
+                if(n.isEqualNode(t)){
+                    ArrayList<Node> result=new ArrayList<Node>();
+                    result.add(t);
+                    return result;
+                }
+            }
+        }
+        return (new ArrayList<Node>());
     }
 
 }
