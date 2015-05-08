@@ -49,16 +49,16 @@ whereClause : 'where' cond ;
 
 returnClause : 'return' xq ;
 
-cond : xq '=' xq
-     | xq 'eq' xq
-     | xq '==' xq
-     | xq 'is' xq
-     | 'empty''(' xq ')'
-     | 'some' var 'in' xq (',' var 'in' xq)* 'satisfies' cond
-     | '(' cond ')'
-     | cond 'and' cond
-     | cond 'or' cond
-     | 'not' cond
+cond : xq '=' xq              #condEq
+     | xq 'eq' xq             #condEq
+     | xq '==' xq             #condIs
+     | xq 'is' xq             #condIs
+     | 'empty''(' xq ')'      #condEmp
+     | 'some' var 'in' xq (',' var 'in' xq)* 'satisfies' cond  #condSome
+     | '(' cond ')'           #condPlain
+     | cond 'and' cond        #condAnd
+     | cond 'or' cond         #condOr
+     | 'not' cond             #condNot
      ;
 
 Id : [^_A-Za-z][_A-Za-z0-9-.]* ;
