@@ -16,4 +16,10 @@ public class Context {
     public ArrayList<Node> get(String s){
         return map.get(s);
     }
+
+    public boolean equals(Context c){
+        if (c.map.equals(this.map))
+            return true;
+        return false;
+    }
 }
