@@ -6,13 +6,13 @@ import org.antlr.v4.runtime.tree.*;
 public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     private Stack<ArrayList<Node>> stack;
-    //private ArrayList<Node> list;
+    private Stack<Context> ctxStack;
     private DomTree tree;
 
     public EvalVisitor(){
         super();
         stack=new Stack<ArrayList<Node>>();
-        //list=new ArrayList<Node>();
+        ctxStack=new Stack<Context>();
         //this.tree=tree;
     }
 
@@ -308,5 +308,68 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         }
         return (new ArrayList<Node>());
     }
+
+    //xq
+    //var
+    @Override
+    public ArrayList<Node> visitXVar(x_path_grammarParser.XVarContext ctx){
+        Context c= ctxStack.peek();
+        String s= ctx.getChild(1).getText();
+        return c.get(s);
+    }
+
+    //String_constant
+    @Override
+    public ArrayList<Node> visitXStr(x_path_grammarParser.XStrContext ctx){
+        String s=ctx.String_constant().getText();
+        Text t= tree.self.createTextNode(s);
+        ArrayList<Node> result=new ArrayList<Node>();
+        result.add(t);
+        return result;
+    }
+
+    //(xq)
+    @Override
+    public ArrayList<Node> visitXPlain(x_path_grammarParser.XPlainContext ctx){
+        return visit(ctx.xq());
+    }
+
+    //xq,xq
+    @Override
+    public ArrayList<Node> visitXInd(x_path_grammarParser.XIndContext ctx){
+        Context c= ctxStack.peek();
+        ArrayList<Node> result=new ArrayList<Node>();
+        ArrayList<Node> curr=stack.peek();
+        ArrayList<Node> temp=visit(ctx.left);
+        result.addAll(temp);
+        if (!stack.peek().equals(curr))
+            stack.push(curr);
+        if (!ctxStack.peek().equals(c))
+            ctxStack.push(c);
+        temp=visit(ctx.right);
+        result.addAll(temp);
+        return result;
+    }
+
+    //xq/rp
+    @Override
+    public ArrayList<Node> visitXSlash(x_path_grammarParser.XSlashContext ctx){
+        ArrayList<Node> curr=visit(ctx.xq());
+        stack.push(curr);
+        return Utils.getUnique(visit(ctx.rp()));
+    }
+
+    //making node thing
+    @Override public ArrayList<Node> visitXNode(x_path_grammarParser.XNodeContext ctx){
+        ArrayList<Node> result=new ArrayList<Node>();
+        Element node = tree.self.createElement(ctx.lt.getText());
+        ArrayList<Node> children=visit(ctx.xq());
+        for(int i=0;i<children.size();i++){
+            node.appendChild(children.get(i));
+        }
+        result.add(node);
+        return result;
+    }
+
 
 }

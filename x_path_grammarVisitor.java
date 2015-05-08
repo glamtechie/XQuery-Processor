@@ -244,21 +244,65 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitReturnClause(x_path_grammarParser.ReturnClauseContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link x_path_grammarParser#cond}.
+	 * Visit a parse tree produced by the {@code condEq}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitCond(x_path_grammarParser.CondContext ctx);
+	T visitCondEq(x_path_grammarParser.CondEqContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condSome}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondSome(x_path_grammarParser.CondSomeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condIs}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondIs(x_path_grammarParser.CondIsContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condEmp}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondEmp(x_path_grammarParser.CondEmpContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condAnd}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondAnd(x_path_grammarParser.CondAndContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condOr}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondOr(x_path_grammarParser.CondOrContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condPlain}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondPlain(x_path_grammarParser.CondPlainContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condNot}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondNot(x_path_grammarParser.CondNotContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link x_path_grammarParser#var}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
 	T visitVar(x_path_grammarParser.VarContext ctx);
-	/**
-	 * Visit a parse tree produced by {@link x_path_grammarParser#file_name}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFile_name(x_path_grammarParser.File_nameContext ctx);
 }
