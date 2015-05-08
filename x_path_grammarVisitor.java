@@ -157,11 +157,68 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFAnd(x_path_grammarParser.FAndContext ctx);
 	/**
-	 * Visit a parse tree produced by {@link x_path_grammarParser#xq}.
+	 * Visit a parse tree produced by the {@code xInd}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
 	 * @param ctx the parse tree
 	 * @return the visitor result
 	 */
-	T visitXq(x_path_grammarParser.XqContext ctx);
+	T visitXInd(x_path_grammarParser.XIndContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xLet}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXLet(x_path_grammarParser.XLetContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xState}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXState(x_path_grammarParser.XStateContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xAp}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXAp(x_path_grammarParser.XApContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xVar}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXVar(x_path_grammarParser.XVarContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xNode}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXNode(x_path_grammarParser.XNodeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xSlash}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXSlash(x_path_grammarParser.XSlashContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xPlain}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXPlain(x_path_grammarParser.XPlainContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xStr}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXStr(x_path_grammarParser.XStrContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link x_path_grammarParser#forClause}.
 	 * @param ctx the parse tree

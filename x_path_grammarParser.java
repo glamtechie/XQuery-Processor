@@ -798,45 +798,136 @@ public class x_path_grammarParser extends Parser {
 	}
 
 	public static class XqContext extends ParserRuleContext {
-		public LetClauseContext letClause() {
-			return getRuleContext(LetClauseContext.class,0);
+		public XqContext(ParserRuleContext parent, int invokingState) {
+			super(parent, invokingState);
 		}
+		@Override public int getRuleIndex() { return RULE_xq; }
+	 
+		public XqContext() { }
+		public void copyFrom(XqContext ctx) {
+			super.copyFrom(ctx);
+		}
+	}
+	public static class XIndContext extends XqContext {
+		public XqContext left;
+		public XqContext right;
 		public List<XqContext> xq() {
 			return getRuleContexts(XqContext.class);
 		}
 		public XqContext xq(int i) {
 			return getRuleContext(XqContext.class,i);
 		}
-		public VarContext var() {
-			return getRuleContext(VarContext.class,0);
+		public XIndContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXInd(this);
+			else return visitor.visitChildren(this);
 		}
-		public TerminalNode String_constant() { return getToken(x_path_grammarParser.String_constant, 0); }
-		public ApContext ap() {
-			return getRuleContext(ApContext.class,0);
+	}
+	public static class XLetContext extends XqContext {
+		public LetClauseContext letClause() {
+			return getRuleContext(LetClauseContext.class,0);
 		}
-		public List<TerminalNode> Id() { return getTokens(x_path_grammarParser.Id); }
-		public TerminalNode Id(int i) {
-			return getToken(x_path_grammarParser.Id, i);
+		public XqContext xq() {
+			return getRuleContext(XqContext.class,0);
 		}
+		public XLetContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXLet(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class XStateContext extends XqContext {
 		public ForClauseContext forClause() {
 			return getRuleContext(ForClauseContext.class,0);
 		}
 		public ReturnClauseContext returnClause() {
 			return getRuleContext(ReturnClauseContext.class,0);
 		}
+		public LetClauseContext letClause() {
+			return getRuleContext(LetClauseContext.class,0);
+		}
 		public WhereClauseContext whereClause() {
 			return getRuleContext(WhereClauseContext.class,0);
+		}
+		public XStateContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXState(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class XApContext extends XqContext {
+		public ApContext ap() {
+			return getRuleContext(ApContext.class,0);
+		}
+		public XApContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXAp(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class XVarContext extends XqContext {
+		public VarContext var() {
+			return getRuleContext(VarContext.class,0);
+		}
+		public XVarContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXVar(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class XNodeContext extends XqContext {
+		public Token lt;
+		public Token rt;
+		public XqContext xq() {
+			return getRuleContext(XqContext.class,0);
+		}
+		public List<TerminalNode> Id() { return getTokens(x_path_grammarParser.Id); }
+		public TerminalNode Id(int i) {
+			return getToken(x_path_grammarParser.Id, i);
+		}
+		public XNodeContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXNode(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class XSlashContext extends XqContext {
+		public XqContext xq() {
+			return getRuleContext(XqContext.class,0);
 		}
 		public RpContext rp() {
 			return getRuleContext(RpContext.class,0);
 		}
-		public XqContext(ParserRuleContext parent, int invokingState) {
-			super(parent, invokingState);
-		}
-		@Override public int getRuleIndex() { return RULE_xq; }
+		public XSlashContext(XqContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXq(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXSlash(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class XPlainContext extends XqContext {
+		public XqContext xq() {
+			return getRuleContext(XqContext.class,0);
+		}
+		public XPlainContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXPlain(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class XStrContext extends XqContext {
+		public TerminalNode String_constant() { return getToken(x_path_grammarParser.String_constant, 0); }
+		public XStrContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXStr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -861,6 +952,10 @@ public class x_path_grammarParser extends Parser {
 			switch (_input.LA(1)) {
 			case T__28:
 				{
+				_localctx = new XLetContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
+
 				setState(109);
 				letClause();
 				setState(110);
@@ -869,24 +964,36 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case T__35:
 				{
+				_localctx = new XVarContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(112);
 				var();
 				}
 				break;
 			case String_constant:
 				{
+				_localctx = new XStrContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(113);
 				match(String_constant);
 				}
 				break;
 			case T__0:
 				{
+				_localctx = new XApContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(114);
 				ap();
 				}
 				break;
 			case T__7:
 				{
+				_localctx = new XPlainContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(115);
 				match(T__7);
 				setState(116);
@@ -897,10 +1004,13 @@ public class x_path_grammarParser extends Parser {
 				break;
 			case T__22:
 				{
+				_localctx = new XNodeContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(119);
 				match(T__22);
 				setState(120);
-				match(Id);
+				((XNodeContext)_localctx).lt = match(Id);
 				setState(121);
 				match(T__23);
 				setState(122);
@@ -908,13 +1018,16 @@ public class x_path_grammarParser extends Parser {
 				setState(123);
 				match(T__24);
 				setState(124);
-				match(Id);
+				((XNodeContext)_localctx).rt = match(Id);
 				setState(125);
 				match(T__25);
 				}
 				break;
 			case T__26:
 				{
+				_localctx = new XStateContext(_localctx);
+				_ctx = _localctx;
+				_prevctx = _localctx;
 				setState(127);
 				forClause();
 				setState(129);
@@ -955,19 +1068,20 @@ public class x_path_grammarParser extends Parser {
 					switch ( getInterpreter().adaptivePredict(_input,10,_ctx) ) {
 					case 1:
 						{
-						_localctx = new XqContext(_parentctx, _parentState);
+						_localctx = new XIndContext(new XqContext(_parentctx, _parentState));
+						((XIndContext)_localctx).left = _prevctx;
 						pushNewRecursionContext(_localctx, _startState, RULE_xq);
 						setState(138);
 						if (!(precpred(_ctx, 5))) throw new FailedPredicateException(this, "precpred(_ctx, 5)");
 						setState(139);
 						match(T__13);
 						setState(140);
-						xq(6);
+						((XIndContext)_localctx).right = xq(6);
 						}
 						break;
 					case 2:
 						{
-						_localctx = new XqContext(_parentctx, _parentState);
+						_localctx = new XSlashContext(new XqContext(_parentctx, _parentState));
 						pushNewRecursionContext(_localctx, _startState, RULE_xq);
 						setState(141);
 						if (!(precpred(_ctx, 4))) throw new FailedPredicateException(this, "precpred(_ctx, 4)");
