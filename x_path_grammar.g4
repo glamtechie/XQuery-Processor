@@ -63,7 +63,7 @@ cond : xq '=' xq
 
 Id : [^_A-Za-z][_A-Za-z0-9-.]* ;
 
-var : '$' Id ; #var
+var : '$' Id #onlyVar;
 
 String_constant : [^"][_A-Za-z0-9-.!, ]*["$] ;
 
