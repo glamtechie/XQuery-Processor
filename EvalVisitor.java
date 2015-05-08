@@ -16,6 +16,25 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         //this.tree=tree;
     }
 
+    private ArrayList<Node> descOrSelf(Node n){
+        ArrayList<Node> nodes = new ArrayList<Node>();
+        //putting all nodes in a single array list in document order and then
+        Stack <Node> sdfs = new Stack <Node>();
+        sdfs.push(n);
+        // Perform DFS - Center, Left, Right order.
+        while (!sdfs.isEmpty()) {
+          Node node = sdfs.pop();
+          // Add this node to be visited.
+          nodes.add(node);
+          //System.out.println ("Adding node during dfs: %s");
+          // Add all the children of this node to the DFS stack so that they can be added for visiting
+          NodeList children = node.getChildNodes();
+          for (int i = children.getLength() - 1; i >=0 ; i--) {
+            sdfs.push(children.item(i));
+          }
+        }
+        return nodes;
+    }
     //Absolute
     //document("filename")/rp
     @Override
@@ -29,6 +48,16 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return visit(ctx.rp());
     }
 
+    //document("filename")//rp
+    @Override
+    public ArrayList<Node> visitApDeep(x_path_grammarParser.ApDeepContext ctx){
+        String filename=ctx.tag.getText();
+        tree=new DomTree(filename);
+        ArrayList<Node> nodes = descOrSelf(tree.root);
+        stack.push(nodes);
+        return Utils.getUnique(visit(ctx.rp())); //put unique?
+    }
+
 
     //Relative
     //rp/rp
@@ -37,7 +66,21 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> curr=visit(ctx.left);
         stack.push(curr);
         System.out.println("RPNext");
-        return visit(ctx.right);
+        return Utils.getUnique(visit(ctx.right));
+    }
+
+    //rp//rp
+    @Override
+    public ArrayList<Node> visitRpDeep(x_path_grammarParser.RpDeepContext ctx){
+        ArrayList<Node> curr=visit(ctx.left);
+        ArrayList<Node> result=new ArrayList<Node>();
+        for(int i=0;i<curr.size();i++){
+            ArrayList<Node> nodes = descOrSelf(curr.get(i));
+            stack.push(nodes);
+            result.addAll(visit(ctx.right));
+        }
+
+        return Utils.getUnique(result);
     }
 
     //.
