@@ -277,9 +277,9 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitFIs(x_path_grammarParser.FIsContext ctx){
         ArrayList<Node> curr=stack.peek();
         ArrayList<Node> f1=visit(ctx.left);
+        stack.push(curr);
+        ArrayList<Node> f2=visit(ctx.right);
         for(Node n:f1){
-            stack.push(curr);
-            ArrayList<Node> f2=visit(ctx.right);
             for (Node t:f2){
                 if(n.isSameNode(t)){
                     ArrayList<Node> result=new ArrayList<Node>();
@@ -295,9 +295,9 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitFEq(x_path_grammarParser.FEqContext ctx){
         ArrayList<Node> curr=stack.peek();
         ArrayList<Node> f1=visit(ctx.left);
+        stack.push(curr);
+        ArrayList<Node> f2=visit(ctx.right);
         for(Node n:f1){
-            stack.push(curr);
-            ArrayList<Node> f2=visit(ctx.right);
             for (Node t:f2){
                 if(n.isEqualNode(t)){
                     ArrayList<Node> result=new ArrayList<Node>();
@@ -370,6 +370,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         result.add(node);
         return result;
     }
+
 
 
 }
