@@ -164,7 +164,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> result=new ArrayList<Node>();
         for(int i=0;i<curr.size();i++){
             if (curr.get(i).hasAttributes()){
-                Node n=curr.get(i).getAttributes().getNamedItem(ctx.Tagname().getText());
+                Node n=curr.get(i).getAttributes().getNamedItem(ctx.Id().getText());
                 if (n!=null){
                     result.add(n);
                 }
@@ -212,7 +212,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
                 Node node = list.item(j);
                 if(node instanceof Element){
                     Element child=(Element)node;
-                    if (child.getNodeName().equals(ctx.Tagname().getText()))
+                    if (child.getNodeName().equals(ctx.Id().getText()))
                         result.add(node);
                 }
             }

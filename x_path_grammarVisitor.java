@@ -129,13 +129,6 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFEq(x_path_grammarParser.FEqContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code fVal}
-	 * labeled alternative in {@link x_path_grammarParser#f}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFVal(x_path_grammarParser.FValContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code fRp}
 	 * labeled alternative in {@link x_path_grammarParser#f}.
 	 * @param ctx the parse tree
@@ -163,4 +156,52 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFAnd(x_path_grammarParser.FAndContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXq(x_path_grammarParser.XqContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#forClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForClause(x_path_grammarParser.ForClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#letClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLetClause(x_path_grammarParser.LetClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#whereClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhereClause(x_path_grammarParser.WhereClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#returnClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnClause(x_path_grammarParser.ReturnClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCond(x_path_grammarParser.CondContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#var}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVar(x_path_grammarParser.VarContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#file_name}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitFile_name(x_path_grammarParser.File_nameContext ctx);
 }
