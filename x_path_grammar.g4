@@ -1,4 +1,4 @@
-grammar x_query_grammar;
+grammar x_path_grammar;
 
 r : xq ;
 
