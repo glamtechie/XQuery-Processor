@@ -2,8 +2,8 @@ grammar x_path_grammar;
 
 r : xq ;
 
-ap : 'document("' tag=file_name '")/' rp   #apSlash
-   | 'document("' tag=file_name '")//' rp  #apDeep
+ap : 'document' '("' tag=file_name '")' '/' rp   #apSlash
+   | 'document' '("' tag=file_name '")' '//' rp  #apDeep
    ;
 
 rp : Id        #rpTag
@@ -36,7 +36,7 @@ xq : var    #xVar
    | '(' xq ')'     #xPlain
    | left=xq ',' right=xq      #xInd
    | xq '/' rp      #xSlash
-   | '<' lt=Id '>{' xq '}</' rt=Id '>'    #xNode
+   | '<' lt=Id '>' '{' xq '}' '</' rt=Id '>'    #xNode
    | forClause (letClause)? (whereClause)? returnClause #xState
    | letClause xq   #xLet
    ;
@@ -53,7 +53,7 @@ cond : xq '=' xq
      | xq 'eq' xq
      | xq '==' xq
      | xq 'is' xq
-     | 'empty(' xq ')'
+     | 'empty''(' xq ')'
      | 'some' var 'in' xq (',' var 'in' xq)* 'satisfies' cond
      | '(' cond ')'
      | cond 'and' cond
@@ -67,6 +67,6 @@ var : '$' Id ;
 
 file_name : Id('.'Id)* ;
 
-String_constant : [^"][_A-Za-z0-9-." ]* ;
+String_constant : [^"][_A-Za-z0-9-.!, ]*["$] ;
 
 Ws: [\t\r\n ]+ -> skip;
