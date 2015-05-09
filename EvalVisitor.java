@@ -393,5 +393,107 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return result;
     }
 
+    @Override
+    public ArrayList<Node> visitCondEq(x_path_grammarParser.CondEqContext ctx){
+        Context c= ctxStack.peek();
+        ArrayList<Node> result=new ArrayList<Node>();
+        ArrayList<Node> cond1=visit(ctx.left);
+        if (!ctxStack.peek().equals(c))
+            ctxStack.push(c);
+        ArrayList<Node> cond2=visit(ctx.right);
+        for(Node n:cond1){
+            for (Node t:cond2){
+                if(n.isEqualNode(t)){
+                    result.add(t);
+                    return result;
+                }
+            }
+        }
+        return (new ArrayList<Node>());
+    }
+
+    @Override
+    public ArrayList<Node> visitCondIs(x_path_grammarParser.CondIsContext ctx){
+        Context c= ctxStack.peek();
+        ArrayList<Node> result=new ArrayList<Node>();
+        ArrayList<Node> cond1=visit(ctx.left);
+        if (!ctxStack.peek().equals(c))
+            ctxStack.push(c);
+        ArrayList<Node> cond2=visit(ctx.right);
+        for(Node n:cond1){
+            for (Node t:cond2){
+                if(n.isSameNode(t)){
+                    result.add(t);
+                    return result;
+                }
+            }
+        }
+        return (new ArrayList<Node>());
+    }
+
+    @Override
+    public ArrayList<Node> visitCondAnd(x_path_grammarParser.CondAndContext ctx){
+        Context c= ctxStack.peek();
+        ArrayList<Node> cond1=visit(ctx.left);
+        if (!ctxStack.peek().equals(c))
+            ctxStack.push(c);
+        ArrayList<Node> cond2=visit(ctx.right);
+        if(cond1.size()>0 && cond2.size()>0){
+                cond1.add(tree.root);
+                return cond1;
+        }
+        return (new ArrayList<Node>());
+    }
+
+    @Override
+    public ArrayList<Node> visitCondOr(x_path_grammarParser.CondOrContext ctx){
+        Context c= ctxStack.peek();
+        ArrayList<Node> cond1=visit(ctx.left);
+        if (!ctxStack.peek().equals(c))
+            ctxStack.push(c);
+        ArrayList<Node> cond2=visit(ctx.right);
+        if(cond1.size()>0 || cond2.size()>0){
+                cond1.add(tree.root);
+                return cond1;
+        }
+        return (new ArrayList<Node>());
+    }
+
+    @Override
+    public ArrayList<Node> visitCondNot(x_path_grammarParser.CondNotContext ctx) {
+        Context c= ctxStack.peek();
+        ArrayList<Node> res=visit(ctx.cond());
+        if(res.size()>0){
+                return (new ArrayList<Node>());
+        }
+        res.add(tree.root);
+        return res;
+    }
+
+    @Override
+    public ArrayList<Node> visitCondPlain(x_path_grammarParser.CondPlainContext ctx){
+        return visit(ctx.cond());
+    }
+
+    @Override
+    public ArrayList<Node> visitCondEmp(x_path_grammarParser.CondEmpContext ctx){
+        Context c= ctxStack.peek();
+        ArrayList<Node> res=visit(ctx.xq());
+        if(res.size()>0){
+                return (new ArrayList<Node>());
+        }
+        res.add(tree.root);
+        return res;
+    }
+
+    @Override
+    public ArrayList<Node> visitWhereClause(x_path_grammarParser.WhereClauseContext ctx){
+        return visit(ctx.cond());
+    }
+
+    @Override
+    public ArrayList<Node> visitReturnClause(x_path_grammarParser.ReturnClauseContext ctx){
+        return visit(ctx.xq());
+    }
 
 }
