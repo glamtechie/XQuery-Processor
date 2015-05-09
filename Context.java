@@ -9,6 +9,10 @@ public class Context {
         map.putAll(c.map);
     }
 
+    public Context(){
+        map= new HashMap<String,ArrayList<Node>>();
+    }
+
     public void set(String s, ArrayList<Node> list ){
         map.put(s,list);
     }

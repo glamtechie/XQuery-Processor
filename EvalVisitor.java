@@ -7,12 +7,14 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     private Stack<ArrayList<Node>> stack;
     private Stack<Context> ctxStack;
+    private Stack<ArrayList<Context>> ctxListStack;
     private DomTree tree;
 
     public EvalVisitor(){
         super();
         stack=new Stack<ArrayList<Node>>();
         ctxStack=new Stack<Context>();
+        ctxListStack=new Stack<ArrayList<Context>>();
         //this.tree=tree;
     }
 
@@ -253,10 +255,10 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> f2=visit(ctx.right);
         stack.push(curr);
         if(f1.size()>0 || f2.size()>0){
-            return (new ArrayList<Node>());
+            f1.add(tree.root);
+            return f1;
         }
-        f1.add(tree.root);
-        return f1;
+        return (new ArrayList<Node>());
     }
 
     @Override
@@ -267,10 +269,10 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> f2=visit(ctx.right);
         stack.push(curr);
         if(f1.size()>0 && f2.size()>0){
-            return (new ArrayList<Node>());
+            f1.add(tree.root);
+            return f1;
         }
-        f1.add(tree.root);
-        return f1;
+        return (new ArrayList<Node>());
     }
 
     @Override
@@ -360,7 +362,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     }
 
     //making node thing
-    @Override public ArrayList<Node> visitXNode(x_path_grammarParser.XNodeContext ctx){
+    @Override
+    public ArrayList<Node> visitXNode(x_path_grammarParser.XNodeContext ctx){
         ArrayList<Node> result=new ArrayList<Node>();
         Element node = tree.self.createElement(ctx.lt.getText());
         ArrayList<Node> children=visit(ctx.xq());
@@ -371,6 +374,24 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return result;
     }
 
+    @Override
+    public ArrayList<Node> visitXState(x_path_grammarParser.XStateContext ctx){
+        visit(ctx.forClause());
+        ArrayList<Context> ac= ctxListStack.pop();
+        ArrayList<Node> result=new ArrayList<Node>();
+        for (Context c: ac){
+            ctxStack.push(c);
+            if (ctx.letClause()!=null){
+                visit(ctx.letClause());
+            }
+            if (ctx.whereClause()!=null && visit(ctx.whereClause()).size()>0){
+                result.addAll(visit(ctx.returnClause()));
+            }
+            ctxStack.pop();
+        }
+
+        return result;
+    }
 
 
 }
