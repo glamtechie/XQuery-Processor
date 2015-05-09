@@ -393,6 +393,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return result;
     }
 
+    //xq=xq
+    //xq eq xq
     @Override
     public ArrayList<Node> visitCondEq(x_path_grammarParser.CondEqContext ctx){
         Context c= ctxStack.peek();
@@ -412,6 +414,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return (new ArrayList<Node>());
     }
 
+    //xq is xq 
+    //xq == xq
     @Override
     public ArrayList<Node> visitCondIs(x_path_grammarParser.CondIsContext ctx){
         Context c= ctxStack.peek();
@@ -431,6 +435,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return (new ArrayList<Node>());
     }
 
+    //cond and cond
     @Override
     public ArrayList<Node> visitCondAnd(x_path_grammarParser.CondAndContext ctx){
         Context c= ctxStack.peek();
@@ -445,6 +450,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return (new ArrayList<Node>());
     }
 
+    //cond or cond
     @Override
     public ArrayList<Node> visitCondOr(x_path_grammarParser.CondOrContext ctx){
         Context c= ctxStack.peek();
@@ -459,6 +465,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return (new ArrayList<Node>());
     }
 
+    //not cond
     @Override
     public ArrayList<Node> visitCondNot(x_path_grammarParser.CondNotContext ctx) {
         Context c= ctxStack.peek();
@@ -470,11 +477,13 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return res;
     }
 
+    //(cond)
     @Override
     public ArrayList<Node> visitCondPlain(x_path_grammarParser.CondPlainContext ctx){
         return visit(ctx.cond());
     }
 
+    //empty(xq)
     @Override
     public ArrayList<Node> visitCondEmp(x_path_grammarParser.CondEmpContext ctx){
         Context c= ctxStack.peek();
@@ -486,11 +495,13 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return res;
     }
 
+    // where cond
     @Override
     public ArrayList<Node> visitWhereClause(x_path_grammarParser.WhereClauseContext ctx){
         return visit(ctx.cond());
     }
 
+    //return xq
     @Override
     public ArrayList<Node> visitReturnClause(x_path_grammarParser.ReturnClauseContext ctx){
         return visit(ctx.xq());
