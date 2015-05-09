@@ -46,7 +46,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> root=new ArrayList<Node>();
         root.add(tree.root);
         stack.push(root);
-        System.out.println("APSlash");
+        //System.out.println("APSlash");
         return visit(ctx.rp());
     }
 
@@ -67,7 +67,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitRpNext(x_path_grammarParser.RpNextContext ctx){
         ArrayList<Node> curr=visit(ctx.left);
         stack.push(curr);
-        System.out.println("RPNext");
+        //System.out.println("RPNext");
         return Utils.getUnique(visit(ctx.right));
     }
 
@@ -208,7 +208,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> result=new ArrayList<Node>();
 
         for(int i=0;i<curr.size();i++){
-            System.out.println(curr.get(i).getNodeName());
+            //System.out.println(curr.get(i).getNodeName());
             NodeList list=curr.get(i).getChildNodes();
             for(int j=0; j<list.getLength(); j++){
                 Node node = list.item(j);
@@ -219,7 +219,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
                 }
             }
         }
-        System.out.println("Tag");
+        //System.out.println("Tag");
         return result;
     }
 
@@ -386,6 +386,9 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
                 visit(ctx.letClause());
             }
             if (ctx.whereClause()!=null && visit(ctx.whereClause()).size()>0){
+                result.addAll(visit(ctx.returnClause()));
+            }
+            else if(ctx.whereClause()==null){
                 result.addAll(visit(ctx.returnClause()));
             }
             ctxStack.pop();
