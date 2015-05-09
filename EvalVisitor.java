@@ -440,6 +440,66 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return null;
     }
 
+    //let
+    @Override
+    public ArrayList<Node> visitLetClause(x_path_grammarParser.LetClauseContext ctx){
+        List<x_path_grammarParser.VarContext> variables=ctx.var();
+        List<x_path_grammarParser.XqContext> queries=ctx.xq();
+        for(int i=0;i<variables.size();i++){
+            ArrayList<Node> res=visit(queries.get(i));
+            Context c=ctxStack.pop();
+            c.set(variables.get(i).Id().getText(),res);
+            ctxStack.push(c);
+        }
+        return null;
+    }
+
+
+    //xlet
+    //letClause xq
+    @Override
+    public ArrayList<Node> visitXLet(x_path_grammarParser.XLetContext ctx){
+        Context c;
+        if(ctxStack.empty()){
+            c=new Context();
+        }
+        else{
+            c=new Context(ctxStack.peek());
+        }
+
+        ctxStack.push(c);
+        visit(ctx.letClause());
+        ArrayList<Node> result=visit(ctx.xq());
+        ctxStack.pop();
+
+        return result;
+    }
+
+    //cond
+    //some..
+    @Override
+    public ArrayList<Node> visitCondSome(x_path_grammarParser.CondSomeContext ctx){
+        Context c;
+        if(ctxStack.empty()){
+            c=new Context();
+        }
+        else{
+            c=new Context(ctxStack.peek());
+        }
+        ctxStack.push(c);
+        List<x_path_grammarParser.VarContext> variables=ctx.var();
+        List<x_path_grammarParser.XqContext> queries=ctx.xq();
+        for(int i=0;i<variables.size();i++){
+            ArrayList<Node> res=visit(queries.get(i));
+            c=ctxStack.pop();
+            c.set(variables.get(i).Id().getText(),res);
+            ctxStack.push(c);
+        }
+
+        return visit(ctx.cond());
+
+    }
+
     //xq=xq
     //xq eq xq
     @Override
