@@ -374,6 +374,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return result;
     }
 
+    //for..
     @Override
     public ArrayList<Node> visitXState(x_path_grammarParser.XStateContext ctx){
         visit(ctx.forClause());
@@ -391,6 +392,52 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         }
 
         return result;
+    }
+
+    //for
+    @Override
+    public ArrayList<Node> visitForClause(x_path_grammarParser.ForClauseContext ctx){
+        Context c;
+        if(ctxStack.empty()){
+            c=new Context();
+        }
+        else{
+            c=new Context(ctxStack.peek());
+        }
+
+        ArrayList<Context> clist= new ArrayList<Context>();
+        clist.add(c);
+
+        List<x_path_grammarParser.VarContext> variables=ctx.var();
+        List<x_path_grammarParser.XqContext> queries=ctx.xq();
+
+        for(int i=0;i<variables.size();i++){
+            ArrayList<Context> temp=new ArrayList<Context>();
+            for (Context x:clist){
+                ctxStack.push(x);
+                ArrayList<Node> res=visit(queries.get(i));
+                if (res.size()>0){
+                    for (Node n:res){
+                        Context tc=new Context(x);
+                        ArrayList<Node> tres= new ArrayList<Node>();
+                        tres.add(n);
+                        tc.set(variables.get(i).Id().getText(),tres);
+                        temp.add(tc);
+                    }
+                }
+                else{
+                    Context tc=new Context(x);
+                    ArrayList<Node> tres= new ArrayList<Node>();
+                    tc.set(variables.get(i).Id().getText(),tres);
+                    temp.add(tc);
+                }
+                ctxStack.pop();
+            }
+            clist=temp;
+        }
+
+        ctxListStack.push(clist);
+        return null;
     }
 
     //xq=xq
@@ -414,7 +461,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return (new ArrayList<Node>());
     }
 
-    //xq is xq 
+    //xq is xq
     //xq == xq
     @Override
     public ArrayList<Node> visitCondIs(x_path_grammarParser.CondIsContext ctx){
