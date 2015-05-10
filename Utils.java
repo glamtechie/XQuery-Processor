@@ -19,7 +19,7 @@ public class Utils {
   }
 
   public static ArrayList<Node> getUnique(ArrayList<Node> nodes) {
-    return new ArrayList<Node>(new HashSet<Node>(nodes));
+    return new ArrayList<Node>(new LinkedHashSet<Node>(nodes));
     }
 
   public static void preorderTraversal(Node root, ArrayList<String> pre)       

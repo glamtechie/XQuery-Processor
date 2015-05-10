@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE PLAY SYSTEM "play.dtd">
-
+<DUMMY>
 <PLAY>
 <TITLE attr = "testing">The Tragedy of Julius Caesar</TITLE>
 
@@ -6276,3 +6276,8 @@ LUCILIUS, and the army</STAGEDIR>
 </SCENE>
 </ACT>
 </PLAY>
+<PLAY>
+<TITLE attr = "testing">The Tragedy</TITLE>
+</PLAY>
+</DUMMY>
+

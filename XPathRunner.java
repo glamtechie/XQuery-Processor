@@ -27,11 +27,13 @@ public class XPathRunner{
         result=eval.visit(tree);
     Utils.printInDocOrder(result);
     /*
+    result=eval.visit(tree);
     System.out.println(result.size());
     for(int i=0;i<result.size();i++){
         if (result.get(i) instanceof Element){
             Element n=(Element) result.get(i);
             System.out.println(n.getNodeName());
+            //System.out.println(n.hasChildNodes());
             System.out.println(n.getTextContent());
         }
     }
