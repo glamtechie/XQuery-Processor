@@ -22,8 +22,25 @@ import org.xml.sax.SAXException;
 public class DomTree {
 	public Node root;
 	public Document self;
+	public String filename;
 
 	//constructor
+	public DomTree(){
+		DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+		DocumentBuilder builder = null;
+		try {
+		    builder = dbf.newDocumentBuilder();
+		} catch (ParserConfigurationException e) {
+		    e.printStackTrace();
+		}
+		try{
+			self = builder.newDocument();
+			filename="";
+		} catch (Exception e){
+			e.printStackTrace();
+		}
+
+	}
 	public DomTree(String fileName){
 		DocumentBuilderFactory builderFactory =
 		        DocumentBuilderFactory.newInstance();
@@ -35,6 +52,7 @@ public class DomTree {
 		}
 
 		try {
+			filename=fileName;
 		    self = builder.parse(
 		        new FileInputStream(fileName));
 		    root= self.getDocumentElement();
