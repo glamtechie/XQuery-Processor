@@ -140,19 +140,6 @@ public class x_path_grammarParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class ApDeepContext extends ApContext {
-		public Token tag;
-		public RpContext rp() {
-			return getRuleContext(RpContext.class,0);
-		}
-		public TerminalNode Id() { return getToken(x_path_grammarParser.Id, 0); }
-		public ApDeepContext(ApContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitApDeep(this);
-			else return visitor.visitChildren(this);
-		}
-	}
 	public static class ApSlashContext extends ApContext {
 		public Token tag;
 		public RpContext rp() {
@@ -163,6 +150,19 @@ public class x_path_grammarParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitApSlash(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class ApDeepContext extends ApContext {
+		public Token tag;
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public TerminalNode Id() { return getToken(x_path_grammarParser.Id, 0); }
+		public ApDeepContext(ApContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitApDeep(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -233,27 +233,45 @@ public class x_path_grammarParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class RpIndContext extends RpContext {
-		public RpContext left;
-		public RpContext right;
-		public List<RpContext> rp() {
-			return getRuleContexts(RpContext.class);
-		}
-		public RpContext rp(int i) {
-			return getRuleContext(RpContext.class,i);
-		}
-		public RpIndContext(RpContext ctx) { copyFrom(ctx); }
+	public static class RpTextContext extends RpContext {
+		public RpTextContext(RpContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpInd(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpText(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class RpParentContext extends RpContext {
-		public RpParentContext(RpContext ctx) { copyFrom(ctx); }
+	public static class RpCondContext extends RpContext {
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public FContext f() {
+			return getRuleContext(FContext.class,0);
+		}
+		public RpCondContext(RpContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpParent(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpCond(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpPlainContext extends RpContext {
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public RpPlainContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpPlain(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpTagContext extends RpContext {
+		public TerminalNode Id() { return getToken(x_path_grammarParser.Id, 0); }
+		public RpTagContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpTag(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -273,70 +291,11 @@ public class x_path_grammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class RpTagContext extends RpContext {
-		public TerminalNode Id() { return getToken(x_path_grammarParser.Id, 0); }
-		public RpTagContext(RpContext ctx) { copyFrom(ctx); }
+	public static class RpParentContext extends RpContext {
+		public RpParentContext(RpContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpTag(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class RpCurrentContext extends RpContext {
-		public RpCurrentContext(RpContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpCurrent(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class RpAttrContext extends RpContext {
-		public TerminalNode Id() { return getToken(x_path_grammarParser.Id, 0); }
-		public RpAttrContext(RpContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpAttr(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class RpStarContext extends RpContext {
-		public RpStarContext(RpContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpStar(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class RpCondContext extends RpContext {
-		public RpContext rp() {
-			return getRuleContext(RpContext.class,0);
-		}
-		public FContext f() {
-			return getRuleContext(FContext.class,0);
-		}
-		public RpCondContext(RpContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpCond(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class RpTextContext extends RpContext {
-		public RpTextContext(RpContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpText(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class RpPlainContext extends RpContext {
-		public RpContext rp() {
-			return getRuleContext(RpContext.class,0);
-		}
-		public RpPlainContext(RpContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpPlain(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpParent(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -353,6 +312,47 @@ public class x_path_grammarParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpDeep(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpStarContext extends RpContext {
+		public RpStarContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpStar(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpCurrentContext extends RpContext {
+		public RpCurrentContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpCurrent(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpIndContext extends RpContext {
+		public RpContext left;
+		public RpContext right;
+		public List<RpContext> rp() {
+			return getRuleContexts(RpContext.class);
+		}
+		public RpContext rp(int i) {
+			return getRuleContext(RpContext.class,i);
+		}
+		public RpIndContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpInd(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class RpAttrContext extends RpContext {
+		public TerminalNode Id() { return getToken(x_path_grammarParser.Id, 0); }
+		public RpAttrContext(RpContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitRpAttr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -542,28 +542,6 @@ public class x_path_grammarParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
-	public static class FIndContext extends FContext {
-		public FContext f() {
-			return getRuleContext(FContext.class,0);
-		}
-		public FIndContext(FContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFInd(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class FNotContext extends FContext {
-		public FContext f() {
-			return getRuleContext(FContext.class,0);
-		}
-		public FNotContext(FContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFNot(this);
-			else return visitor.visitChildren(this);
-		}
-	}
 	public static class FIsContext extends FContext {
 		public RpContext left;
 		public RpContext right;
@@ -580,30 +558,14 @@ public class x_path_grammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class FAndContext extends FContext {
-		public FContext left;
-		public FContext right;
-		public List<FContext> f() {
-			return getRuleContexts(FContext.class);
+	public static class FNotContext extends FContext {
+		public FContext f() {
+			return getRuleContext(FContext.class,0);
 		}
-		public FContext f(int i) {
-			return getRuleContext(FContext.class,i);
-		}
-		public FAndContext(FContext ctx) { copyFrom(ctx); }
+		public FNotContext(FContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFAnd(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class FRpContext extends FContext {
-		public RpContext rp() {
-			return getRuleContext(RpContext.class,0);
-		}
-		public FRpContext(FContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFRp(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFNot(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -623,6 +585,28 @@ public class x_path_grammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
+	public static class FRpContext extends FContext {
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public FRpContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFRp(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FIndContext extends FContext {
+		public FContext f() {
+			return getRuleContext(FContext.class,0);
+		}
+		public FIndContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFInd(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class FOrContext extends FContext {
 		public FContext left;
 		public FContext right;
@@ -636,6 +620,22 @@ public class x_path_grammarParser extends Parser {
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
 			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFOr(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class FAndContext extends FContext {
+		public FContext left;
+		public FContext right;
+		public List<FContext> f() {
+			return getRuleContexts(FContext.class);
+		}
+		public FContext f(int i) {
+			return getRuleContext(FContext.class,i);
+		}
+		public FAndContext(FContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitFAnd(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -812,6 +812,36 @@ public class x_path_grammarParser extends Parser {
 			super.copyFrom(ctx);
 		}
 	}
+	public static class XIndContext extends XqContext {
+		public XqContext left;
+		public XqContext right;
+		public List<XqContext> xq() {
+			return getRuleContexts(XqContext.class);
+		}
+		public XqContext xq(int i) {
+			return getRuleContext(XqContext.class,i);
+		}
+		public XIndContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXInd(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class XLetContext extends XqContext {
+		public LetClauseContext letClause() {
+			return getRuleContext(LetClauseContext.class,0);
+		}
+		public XqContext xq() {
+			return getRuleContext(XqContext.class,0);
+		}
+		public XLetContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXLet(this);
+			else return visitor.visitChildren(this);
+		}
+	}
 	public static class XStateContext extends XqContext {
 		public ForClauseContext forClause() {
 			return getRuleContext(ForClauseContext.class,0);
@@ -843,53 +873,14 @@ public class x_path_grammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class XIndContext extends XqContext {
-		public XqContext left;
-		public XqContext right;
-		public List<XqContext> xq() {
-			return getRuleContexts(XqContext.class);
+	public static class XVarContext extends XqContext {
+		public VarContext var() {
+			return getRuleContext(VarContext.class,0);
 		}
-		public XqContext xq(int i) {
-			return getRuleContext(XqContext.class,i);
-		}
-		public XIndContext(XqContext ctx) { copyFrom(ctx); }
+		public XVarContext(XqContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXInd(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class XPlainContext extends XqContext {
-		public XqContext xq() {
-			return getRuleContext(XqContext.class,0);
-		}
-		public XPlainContext(XqContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXPlain(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class XStrContext extends XqContext {
-		public TerminalNode String_constant() { return getToken(x_path_grammarParser.String_constant, 0); }
-		public XStrContext(XqContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXStr(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class XSlashContext extends XqContext {
-		public XqContext xq() {
-			return getRuleContext(XqContext.class,0);
-		}
-		public RpContext rp() {
-			return getRuleContext(RpContext.class,0);
-		}
-		public XSlashContext(XqContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXSlash(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXVar(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -910,28 +901,37 @@ public class x_path_grammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class XLetContext extends XqContext {
-		public LetClauseContext letClause() {
-			return getRuleContext(LetClauseContext.class,0);
-		}
+	public static class XSlashContext extends XqContext {
 		public XqContext xq() {
 			return getRuleContext(XqContext.class,0);
 		}
-		public XLetContext(XqContext ctx) { copyFrom(ctx); }
+		public RpContext rp() {
+			return getRuleContext(RpContext.class,0);
+		}
+		public XSlashContext(XqContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXLet(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXSlash(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class XVarContext extends XqContext {
-		public VarContext var() {
-			return getRuleContext(VarContext.class,0);
+	public static class XPlainContext extends XqContext {
+		public XqContext xq() {
+			return getRuleContext(XqContext.class,0);
 		}
-		public XVarContext(XqContext ctx) { copyFrom(ctx); }
+		public XPlainContext(XqContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXVar(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXPlain(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class XStrContext extends XqContext {
+		public TerminalNode String_constant() { return getToken(x_path_grammarParser.String_constant, 0); }
+		public XStrContext(XqContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitXStr(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1366,25 +1366,42 @@ public class x_path_grammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class CondNotContext extends CondContext {
+	public static class CondSomeContext extends CondContext {
+		public List<VarContext> var() {
+			return getRuleContexts(VarContext.class);
+		}
+		public VarContext var(int i) {
+			return getRuleContext(VarContext.class,i);
+		}
+		public List<XqContext> xq() {
+			return getRuleContexts(XqContext.class);
+		}
+		public XqContext xq(int i) {
+			return getRuleContext(XqContext.class,i);
+		}
 		public CondContext cond() {
 			return getRuleContext(CondContext.class,0);
 		}
-		public CondNotContext(CondContext ctx) { copyFrom(ctx); }
+		public CondSomeContext(CondContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitCondNot(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitCondSome(this);
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class CondPlainContext extends CondContext {
-		public CondContext cond() {
-			return getRuleContext(CondContext.class,0);
+	public static class CondIsContext extends CondContext {
+		public XqContext left;
+		public XqContext right;
+		public List<XqContext> xq() {
+			return getRuleContexts(XqContext.class);
 		}
-		public CondPlainContext(CondContext ctx) { copyFrom(ctx); }
+		public XqContext xq(int i) {
+			return getRuleContext(XqContext.class,i);
+		}
+		public CondIsContext(CondContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitCondPlain(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitCondIs(this);
 			else return visitor.visitChildren(this);
 		}
 	}
@@ -1431,42 +1448,25 @@ public class x_path_grammarParser extends Parser {
 			else return visitor.visitChildren(this);
 		}
 	}
-	public static class CondIsContext extends CondContext {
-		public XqContext left;
-		public XqContext right;
-		public List<XqContext> xq() {
-			return getRuleContexts(XqContext.class);
-		}
-		public XqContext xq(int i) {
-			return getRuleContext(XqContext.class,i);
-		}
-		public CondIsContext(CondContext ctx) { copyFrom(ctx); }
-		@Override
-		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitCondIs(this);
-			else return visitor.visitChildren(this);
-		}
-	}
-	public static class CondSomeContext extends CondContext {
-		public List<VarContext> var() {
-			return getRuleContexts(VarContext.class);
-		}
-		public VarContext var(int i) {
-			return getRuleContext(VarContext.class,i);
-		}
-		public List<XqContext> xq() {
-			return getRuleContexts(XqContext.class);
-		}
-		public XqContext xq(int i) {
-			return getRuleContext(XqContext.class,i);
-		}
+	public static class CondPlainContext extends CondContext {
 		public CondContext cond() {
 			return getRuleContext(CondContext.class,0);
 		}
-		public CondSomeContext(CondContext ctx) { copyFrom(ctx); }
+		public CondPlainContext(CondContext ctx) { copyFrom(ctx); }
 		@Override
 		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
-			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitCondSome(this);
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitCondPlain(this);
+			else return visitor.visitChildren(this);
+		}
+	}
+	public static class CondNotContext extends CondContext {
+		public CondContext cond() {
+			return getRuleContext(CondContext.class,0);
+		}
+		public CondNotContext(CondContext ctx) { copyFrom(ctx); }
+		@Override
+		public <T> T accept(ParseTreeVisitor<? extends T> visitor) {
+			if ( visitor instanceof x_path_grammarVisitor ) return ((x_path_grammarVisitor<? extends T>)visitor).visitCondNot(this);
 			else return visitor.visitChildren(this);
 		}
 	}
