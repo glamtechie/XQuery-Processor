@@ -25,7 +25,8 @@ public class XPathRunner{
     ArrayList<Node> result=new ArrayList<Node>();
     if (eval.visit(tree)!=null)
         result=eval.visit(tree);
-
+    Utils.printInDocOrder(result);
+    /*
     System.out.println(result.size());
     for(int i=0;i<result.size();i++){
         if (result.get(i) instanceof Element){
@@ -34,5 +35,7 @@ public class XPathRunner{
             System.out.println(n.getTextContent());
         }
     }
+    */
+    System.out.println("\n");
 }
 }
