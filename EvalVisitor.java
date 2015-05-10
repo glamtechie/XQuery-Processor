@@ -15,6 +15,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         stack=new Stack<ArrayList<Node>>();
         ctxStack=new Stack<Context>();
         ctxListStack=new Stack<ArrayList<Context>>();
+        //tree=null;
         //this.tree=tree;
     }
 
@@ -35,6 +36,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             sdfs.push(children.item(i));
           }
         }
+
         return nodes;
     }
     //Absolute
@@ -42,7 +44,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitApSlash(x_path_grammarParser.ApSlashContext ctx){
         String filename=ctx.tag.getText();
-        tree=new DomTree(filename);
+       if (tree==null)
+            tree=new DomTree(filename);
         ArrayList<Node> root=new ArrayList<Node>();
         root.add(tree.root);
         stack.push(root);
@@ -53,9 +56,13 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     //document("filename")//rp
     @Override
     public ArrayList<Node> visitApDeep(x_path_grammarParser.ApDeepContext ctx){
+        //System.out.println("APDeep");
         String filename=ctx.tag.getText();
-        tree=new DomTree(filename);
+       if(tree==null)
+            tree=new DomTree(filename);
+        //}
         ArrayList<Node> nodes = descOrSelf(tree.root);
+        //System.out.println(nodes.size());
         stack.push(nodes);
         return Utils.getUnique(visit(ctx.rp())); //put unique?
     }
@@ -197,6 +204,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     //tagname
     @Override
     public ArrayList<Node> visitRpTag(x_path_grammarParser.RpTagContext ctx){
+        //System.out.println("Tag");
         ArrayList<Node> curr;
         if(!stack.empty())
             curr=stack.pop();
@@ -215,6 +223,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
                 if(node instanceof Element){
                     Element child=(Element)node;
                     if (child.getNodeName().equals(ctx.Id().getText()))
+                        //debug
+                        //System.out.println(node.getFirstChild().getTextContent());
                         result.add(node);
                 }
             }
@@ -368,7 +378,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         Element node = tree.self.createElement(ctx.lt.getText());
         ArrayList<Node> children=visit(ctx.xq());
         for(int i=0;i<children.size();i++){
-            node.appendChild(children.get(i));
+            Node x=children.get(i).cloneNode(true);
+            node.appendChild(x);
         }
         result.add(node);
         return result;
@@ -380,6 +391,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         visit(ctx.forClause());
         ArrayList<Context> ac= ctxListStack.pop();
         ArrayList<Node> result=new ArrayList<Node>();
+        //System.out.println("Context size:"+ac.size());
         for (Context c: ac){
             ctxStack.push(c);
             if (ctx.letClause()!=null){
@@ -393,13 +405,15 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             }
             ctxStack.pop();
         }
-
+        //for (Node x:result)
+            //System.out.println("Result "+x.getTextContent());
         return result;
     }
 
     //for
     @Override
     public ArrayList<Node> visitForClause(x_path_grammarParser.ForClauseContext ctx){
+        //System.out.println("in for");
         Context c;
         if(ctxStack.empty()){
             c=new Context();
@@ -614,6 +628,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     //return xq
     @Override
     public ArrayList<Node> visitReturnClause(x_path_grammarParser.ReturnClauseContext ctx){
+        //System.out.println("In result");
         return visit(ctx.xq());
     }
 
