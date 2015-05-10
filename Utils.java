@@ -16,4 +16,8 @@ public class Utils {
 
       return copy;
   }
+
+  public static ArrayList<Node> getUnique(ArrayList<Node> nodes) {
+    return new ArrayList<Node>(new HashSet<Node>(nodes));
+    }
 }

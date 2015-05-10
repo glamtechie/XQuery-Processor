@@ -129,13 +129,6 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFEq(x_path_grammarParser.FEqContext ctx);
 	/**
-	 * Visit a parse tree produced by the {@code fVal}
-	 * labeled alternative in {@link x_path_grammarParser#f}.
-	 * @param ctx the parse tree
-	 * @return the visitor result
-	 */
-	T visitFVal(x_path_grammarParser.FValContext ctx);
-	/**
 	 * Visit a parse tree produced by the {@code fRp}
 	 * labeled alternative in {@link x_path_grammarParser#f}.
 	 * @param ctx the parse tree
@@ -163,4 +156,153 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitFAnd(x_path_grammarParser.FAndContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xInd}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXInd(x_path_grammarParser.XIndContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xLet}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXLet(x_path_grammarParser.XLetContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xState}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXState(x_path_grammarParser.XStateContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xAp}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXAp(x_path_grammarParser.XApContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xVar}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXVar(x_path_grammarParser.XVarContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xNode}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXNode(x_path_grammarParser.XNodeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xSlash}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXSlash(x_path_grammarParser.XSlashContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xPlain}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXPlain(x_path_grammarParser.XPlainContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xStr}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXStr(x_path_grammarParser.XStrContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#forClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitForClause(x_path_grammarParser.ForClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#letClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitLetClause(x_path_grammarParser.LetClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#whereClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitWhereClause(x_path_grammarParser.WhereClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#returnClause}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnClause(x_path_grammarParser.ReturnClauseContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condEq}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondEq(x_path_grammarParser.CondEqContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condSome}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondSome(x_path_grammarParser.CondSomeContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condIs}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondIs(x_path_grammarParser.CondIsContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condEmp}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondEmp(x_path_grammarParser.CondEmpContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condAnd}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondAnd(x_path_grammarParser.CondAndContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condOr}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondOr(x_path_grammarParser.CondOrContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condPlain}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondPlain(x_path_grammarParser.CondPlainContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code condNot}
+	 * labeled alternative in {@link x_path_grammarParser#cond}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitCondNot(x_path_grammarParser.CondNotContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#var}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitVar(x_path_grammarParser.VarContext ctx);
 }

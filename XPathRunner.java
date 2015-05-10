@@ -30,6 +30,7 @@ public class XPathRunner{
     for(int i=0;i<result.size();i++){
         if (result.get(i) instanceof Element){
             Element n=(Element) result.get(i);
+            System.out.println(n.getNodeName());
             System.out.println(n.getTextContent());
         }
     }
