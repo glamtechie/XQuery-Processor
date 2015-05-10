@@ -9,12 +9,14 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     private Stack<Context> ctxStack;
     private Stack<ArrayList<Context>> ctxListStack;
     private DomTree tree;
+    private HashMap<String,DomTree> treemap;
 
     public EvalVisitor(){
         super();
         stack=new Stack<ArrayList<Node>>();
         ctxStack=new Stack<Context>();
         ctxListStack=new Stack<ArrayList<Context>>();
+        treemap=new HashMap<String,DomTree>();
         //tree=null;
         //this.tree=tree;
     }
@@ -44,8 +46,14 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitApSlash(x_path_grammarParser.ApSlashContext ctx){
         String filename=ctx.tag.getText();
-       if (tree==null)
-            tree=new DomTree(filename);
+       if (tree==null || (treemap.get(filename)==null)){
+            DomTree newtree=new DomTree(filename);
+            treemap.put(filename,newtree);
+            tree=newtree;
+       }
+       else{
+            tree=treemap.get(filename);
+       }
         ArrayList<Node> root=new ArrayList<Node>();
         root.add(tree.root);
         stack.push(root);
@@ -58,8 +66,14 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitApDeep(x_path_grammarParser.ApDeepContext ctx){
         //System.out.println("APDeep");
         String filename=ctx.tag.getText();
-       if(tree==null)
-            tree=new DomTree(filename);
+       if (tree==null || (treemap.get(filename)==null)){
+            DomTree newtree=new DomTree(filename);
+            treemap.put(filename,newtree);
+            tree=newtree;
+       }
+       else{
+            tree=treemap.get(filename);
+       }
         //}
         ArrayList<Node> nodes = descOrSelf(tree.root);
         //System.out.println(nodes.size());
@@ -464,11 +478,45 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitXNode(x_path_grammarParser.XNodeContext ctx){
         ArrayList<Node> result=new ArrayList<Node>();
+        /*
+        int flag=0;
+        if (tree==null){
+            flag=1;
+            DomTree newtree=new DomTree();
+            treemap.put("",newtree);
+            tree=newtree;
+       }
+
         Element node = tree.self.createElement(ctx.lt.getText());
+        if (flag==1){
+            tree.self.appendChild(node);
+            tree.root=node;
+        }*/
+
         ArrayList<Node> children=visit(ctx.xq());
+        Element node;
+        if (children.size()==0){
+            DomTree newtree=new DomTree();
+            treemap.put("",newtree);
+            tree=newtree;
+            node = tree.self.createElement(ctx.lt.getText());
+            tree.self.appendChild(node);
+            tree.root=node;
+        }
+        else{
+            node=children.get(0).getOwnerDocument().createElement(ctx.lt.getText());
+        }
         for(int i=0;i<children.size();i++){
-            Node x=children.get(i).cloneNode(true);
-            node.appendChild(x);
+            //Node x;
+            if (children.get(i).getOwnerDocument()==node.getOwnerDocument()){
+                //System.out.println(tree.filename);
+                node.appendChild(children.get(i).cloneNode(true));
+            }
+            else{
+                //System.out.println(children.get(i).getOwnerDocument().filename);
+                node.appendChild(tree.self.adoptNode(children.get(i).cloneNode(true)));
+            }
+
         }
         result.add(node);
         return result;
