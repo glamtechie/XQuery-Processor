@@ -139,10 +139,23 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitRpInd(x_path_grammarParser.RpIndContext ctx){
         ArrayList<Node> result=new ArrayList<Node>();
-        ArrayList<Node> curr=stack.peek();
+        ArrayList<Node> curr;
+        if(!stack.empty()){
+            curr=stack.peek();
+        }
+        else{
+            curr=null;
+        }
         ArrayList<Node> temp=visit(ctx.left);
         result.addAll(temp);
-        stack.push(curr);
+        if (curr!=null){
+            if (stack.empty() || !stack.peek().equals(curr))
+                stack.push(curr);
+        }
+        else{
+            if (!stack.empty())
+                stack.pop();
+        }
         temp=visit(ctx.right);
         result.addAll(temp);
         return result;
@@ -259,11 +272,24 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitFOr(x_path_grammarParser.FOrContext ctx){
-        ArrayList<Node> curr=stack.peek();
+        ArrayList<Node> curr;
+        if(!stack.empty()){
+            curr=stack.peek();
+        }
+        else{
+            curr=null;
+        }
         ArrayList<Node> f1=visit(ctx.left);
-        stack.push(curr);
+        if (curr!=null){
+            if (stack.empty() || !stack.peek().equals(curr))
+                stack.push(curr);
+        }
+        else{
+            if (!stack.empty())
+                stack.pop();
+        }
         ArrayList<Node> f2=visit(ctx.right);
-        stack.push(curr);
+        //stack.push(curr);
         if(f1.size()>0 || f2.size()>0){
             f1.add(tree.root);
             return f1;
@@ -273,11 +299,24 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitFAnd(x_path_grammarParser.FAndContext ctx){
-        ArrayList<Node> curr=stack.peek();
+        ArrayList<Node> curr;
+        if(!stack.empty()){
+            curr=stack.peek();
+        }
+        else{
+            curr=null;
+        }
         ArrayList<Node> f1=visit(ctx.left);
-        stack.push(curr);
+        if (curr!=null){
+            if (stack.empty() || !stack.peek().equals(curr))
+                stack.push(curr);
+        }
+        else{
+            if (!stack.empty())
+                stack.pop();
+        }
         ArrayList<Node> f2=visit(ctx.right);
-        stack.push(curr);
+        //stack.push(curr);
         if(f1.size()>0 && f2.size()>0){
             f1.add(tree.root);
             return f1;
@@ -287,9 +326,22 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitFIs(x_path_grammarParser.FIsContext ctx){
-        ArrayList<Node> curr=stack.peek();
+        ArrayList<Node> curr;
+        if(!stack.empty()){
+            curr=stack.peek();
+        }
+        else{
+            curr=null;
+        }
         ArrayList<Node> f1=visit(ctx.left);
-        stack.push(curr);
+        if (curr!=null){
+            if (stack.empty() || !stack.peek().equals(curr))
+                stack.push(curr);
+        }
+        else{
+            if (!stack.empty())
+                stack.pop();
+        }
         ArrayList<Node> f2=visit(ctx.right);
         for(Node n:f1){
             for (Node t:f2){
@@ -305,9 +357,22 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitFEq(x_path_grammarParser.FEqContext ctx){
-        ArrayList<Node> curr=stack.peek();
+        ArrayList<Node> curr;
+        if(!stack.empty()){
+            curr=stack.peek();
+        }
+        else{
+            curr=null;
+        }
         ArrayList<Node> f1=visit(ctx.left);
-        stack.push(curr);
+        if (curr!=null){
+            if (stack.empty() || !stack.peek().equals(curr))
+                stack.push(curr);
+        }
+        else{
+            if (!stack.empty())
+                stack.pop();
+        }
         ArrayList<Node> f2=visit(ctx.right);
         for(Node n:f1){
             for (Node t:f2){
@@ -349,15 +414,39 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     //xq,xq
     @Override
     public ArrayList<Node> visitXInd(x_path_grammarParser.XIndContext ctx){
-        Context c= ctxStack.peek();
+        Context c;
+        if(!ctxStack.empty()){
+            c= ctxStack.peek();
+        }
+        else{
+            c=null;
+        }
         ArrayList<Node> result=new ArrayList<Node>();
-        ArrayList<Node> curr=stack.peek();
+        ArrayList<Node> curr;
+        if(!stack.empty()){
+            curr=stack.peek();
+        }
+        else{
+            curr=null;
+        }
         ArrayList<Node> temp=visit(ctx.left);
         result.addAll(temp);
-        if (!stack.peek().equals(curr))
-            stack.push(curr);
-        if (!ctxStack.peek().equals(c))
-            ctxStack.push(c);
+        if (curr!=null){
+            if (stack.empty() || !stack.peek().equals(curr))
+                stack.push(curr);
+        }
+        else{
+            if (!stack.empty())
+                stack.pop();
+        }
+        if (c!=null){
+            if (ctxStack.empty() ||!ctxStack.peek().equals(c))
+                ctxStack.push(c);
+        }
+        else{
+            if (!ctxStack.empty())
+                ctxStack.pop();
+        }
         temp=visit(ctx.right);
         result.addAll(temp);
         return result;

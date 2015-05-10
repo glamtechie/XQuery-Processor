@@ -26,7 +26,7 @@ public class XPathRunner{
     result=eval.visit(tree);
 
 
-    //System.out.println(result.size());
+    System.out.println(result.size());
     for(int i=0;i<result.size();i++){
         if (result.get(i) instanceof Element){
             Element n=(Element) result.get(i);
