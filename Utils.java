@@ -63,7 +63,7 @@ public class Utils {
   public static void printInDocOrder(ArrayList<Node> nodes) 
   {
 	ArrayList<String> pre = new ArrayList<String>();
-	System.out.format("Size of the result %d",nodes.size());
+	//System.out.format("Size of the result %d",nodes.size());
 	for(int i=0;i<nodes.size();i++)
 	{	
 		preorderTraversal(nodes.get(i), pre, 0,0);
