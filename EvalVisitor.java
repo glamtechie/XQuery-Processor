@@ -406,7 +406,11 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitXVar(x_path_grammarParser.XVarContext ctx){
         Context c= ctxStack.peek();
         String s= ctx.var().Id().getText();
-        return c.get(s);
+        ArrayList<Node> result=c.get(s);
+        if (result!=null)
+            return result;
+        else
+            return (new ArrayList<Node>());
     }
 
     //String_constant
