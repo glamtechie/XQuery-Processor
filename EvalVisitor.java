@@ -413,6 +413,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitXStr(x_path_grammarParser.XStrContext ctx){
         String s=ctx.String_constant().getText();
+        System.out.println(s);
         Text t= tree.self.createTextNode(s);
         ArrayList<Node> result=new ArrayList<Node>();
         result.add(t);
@@ -679,6 +680,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         for(Node n:cond1){
             for (Node t:cond2){
                 if(n.isEqualNode(t)){
+                    System.out.println("Matched");
                     result.add(t);
                     return result;
                 }
