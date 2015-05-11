@@ -1,6 +1,8 @@
 import org.w3c.dom.*;
 import java.util.*;
 import org.antlr.v4.runtime.tree.*;
+import javax.xml.parsers.*;
+import java.io.FileInputStream;
 
 
 public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
@@ -8,15 +10,15 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     private Stack<ArrayList<Node>> stack;
     private Stack<Context> ctxStack;
     private Stack<ArrayList<Context>> ctxListStack;
-    private DomTree tree;
-    private HashMap<String,DomTree> treemap;
+    private Document tree;
+    //private HashMap<String,DomTree> treemap;
 
     public EvalVisitor(){
         super();
         stack=new Stack<ArrayList<Node>>();
         ctxStack=new Stack<Context>();
         ctxListStack=new Stack<ArrayList<Context>>();
-        treemap=new HashMap<String,DomTree>();
+        //treemap=new HashMap<String,DomTree>();
         //tree=null;
         //this.tree=tree;
     }
@@ -46,17 +48,23 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitApSlash(x_path_grammarParser.ApSlashContext ctx){
         String filename=ctx.tag.getText();
-       if (tree==null || (treemap.get(filename)==null)){
-            DomTree newtree=new DomTree(filename);
-            treemap.put(filename,newtree);
-            tree=newtree;
-       }
-       else{
-            tree=treemap.get(filename);
-       }
-        ArrayList<Node> root=new ArrayList<Node>();
-        root.add(tree.root);
-        stack.push(root);
+       //if (tree==null || (treemap.get(filename)==null)){
+            try{
+                Document newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new FileInputStream(filename));
+                tree=newdoc;
+                ArrayList<Node> root=new ArrayList<Node>();
+                root.add(tree.getDocumentElement());
+                stack.push(root);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+            //treemap.put(filename,newtree);
+            //tree=newtree;
+       //}
+       //else{
+            //tree=treemap.get(filename);
+       //}
+
         //System.out.println("APSlash");
         return visit(ctx.rp());
     }
@@ -66,18 +74,23 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitApDeep(x_path_grammarParser.ApDeepContext ctx){
         //System.out.println("APDeep");
         String filename=ctx.tag.getText();
-       if (tree==null || (treemap.get(filename)==null)){
-            DomTree newtree=new DomTree(filename);
-            treemap.put(filename,newtree);
-            tree=newtree;
-       }
-       else{
-            tree=treemap.get(filename);
-       }
+       //if (tree==null || (treemap.get(filename)==null)){
+            try{
+                Document newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new FileInputStream(filename));
+                tree=newdoc;
+                ArrayList<Node> nodes = descOrSelf(tree.getDocumentElement());
+                stack.push(nodes);
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+       //}
+      // else{
+            //tree=treemap.get(filename);
+       //}
         //}
-        ArrayList<Node> nodes = descOrSelf(tree.root);
+
         //System.out.println(nodes.size());
-        stack.push(nodes);
+        //stack.push(nodes);
         return Utils.getUnique(visit(ctx.rp())); //put unique?
     }
 
@@ -237,7 +250,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             curr=stack.pop();
         else{
             curr=new ArrayList<Node>();
-            curr.add(tree.root);
+            curr.add(tree.getDocumentElement());
         }
 
         ArrayList<Node> result=new ArrayList<Node>();
@@ -280,7 +293,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         if(res.size()>0){
             return (new ArrayList<Node>());
         }
-        res.add(tree.root);
+        res.add(tree.getDocumentElement());
         return res;
     }
 
@@ -305,7 +318,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> f2=visit(ctx.right);
         //stack.push(curr);
         if(f1.size()>0 || f2.size()>0){
-            f1.add(tree.root);
+            f1.add(tree.getDocumentElement());
             return f1;
         }
         return (new ArrayList<Node>());
@@ -332,7 +345,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         ArrayList<Node> f2=visit(ctx.right);
         //stack.push(curr);
         if(f1.size()>0 && f2.size()>0){
-            f1.add(tree.root);
+            f1.add(tree.getDocumentElement());
             return f1;
         }
         return (new ArrayList<Node>());
@@ -418,9 +431,15 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node> visitXStr(x_path_grammarParser.XStrContext ctx){
         String s=ctx.String_constant().getText().trim();
         //System.out.println(s);
-        Text t= tree.self.createTextNode(s.substring(1,s.length()-1));
         ArrayList<Node> result=new ArrayList<Node>();
-        result.add(t);
+        try{
+            Document newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            Text t= newdoc.createTextNode(s.substring(1,s.length()-1));
+            result.add(t);
+            tree=newdoc;
+        }catch (Exception ex) {
+        ex.printStackTrace();
+        }
         return result;
     }
 
@@ -483,6 +502,23 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitXNode(x_path_grammarParser.XNodeContext ctx){
         ArrayList<Node> result=new ArrayList<Node>();
+        Document newdoc;
+        try{
+            newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            Element node = newdoc.createElement(ctx.lt.getText());
+            tree=newdoc;
+        ArrayList<Node> children=visit(ctx.xq());
+        for(int i=0;i<children.size();i++){
+            node.appendChild(newdoc.importNode(children.get(i),true));
+        }
+        result.add(node);
+        }catch (Exception ex) {
+        ex.printStackTrace();
+    }
+
+        return result;
+
+
         /*
         int flag=0;
         if (tree==null){
@@ -497,7 +533,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             tree.self.appendChild(node);
             tree.root=node;
         }*/
-
+        /*
         ArrayList<Node> children=visit(ctx.xq());
         Element node;
         if (children.size()==0){
@@ -525,6 +561,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         }
         result.add(node);
         return result;
+        */
     }
 
     //for..
@@ -750,7 +787,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         }
         ArrayList<Node> cond2=visit(ctx.right);
         if(cond1.size()>0 && cond2.size()>0){
-                cond1.add(tree.root);
+                cond1.add(tree.getDocumentElement());
                 return cond1;
         }
         return (new ArrayList<Node>());
@@ -777,7 +814,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         }
         ArrayList<Node> cond2=visit(ctx.right);
         if(cond1.size()>0 || cond2.size()>0){
-                cond1.add(tree.root);
+                cond1.add(tree.getDocumentElement());
                 return cond1;
         }
         return (new ArrayList<Node>());
@@ -797,7 +834,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         if(res.size()>0){
                 return (new ArrayList<Node>());
         }
-        res.add(tree.root);
+        res.add(tree.getDocumentElement());
         return res;
     }
 
@@ -821,7 +858,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         if(res.size()>0){
                 return (new ArrayList<Node>());
         }
-        res.add(tree.root);
+        res.add(tree.getDocumentElement());
         return res;
     }
 
