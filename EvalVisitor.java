@@ -498,6 +498,21 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return Utils.getUnique(visit(ctx.rp()));
     }
 
+    //xq//rp
+    @Override
+    public ArrayList<Node> visitXDeep(x_path_grammarParser.XDeepContext ctx){
+        ArrayList<Node> curr=visit(ctx.xq());
+        ArrayList<Node> result=new ArrayList<Node>();
+        for(int i=0;i<curr.size();i++){
+            ArrayList<Node> nodes = descOrSelf(curr.get(i));
+            stack.push(nodes);
+            result.addAll(visit(ctx.rp()));
+        }
+
+        return Utils.getUnique(result);
+
+    }
+
     //making node thing
     @Override
     public ArrayList<Node> visitXNode(x_path_grammarParser.XNodeContext ctx){

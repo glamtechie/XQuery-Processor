@@ -220,6 +220,13 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitXStr(x_path_grammarParser.XStrContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code xDeep}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXDeep(x_path_grammarParser.XDeepContext ctx);
+	/**
 	 * Visit a parse tree produced by {@link x_path_grammarParser#forClause}.
 	 * @param ctx the parse tree
 	 * @return the visitor result

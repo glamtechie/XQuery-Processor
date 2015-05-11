@@ -36,6 +36,7 @@ xq : var    #xVar
    | '(' xq ')'     #xPlain
    | left=xq ',' right=xq      #xInd
    | xq '/' rp      #xSlash
+   | xq '//' rp   #xDeep
    | '<' lt=Id '>' '{' xq '}' '</' rt=Id '>'    #xNode
    | forClause (letClause)? (whereClause)? returnClause #xState
    | letClause xq   #xLet

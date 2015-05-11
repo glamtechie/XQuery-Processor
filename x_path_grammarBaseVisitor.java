@@ -227,6 +227,13 @@ public class x_path_grammarBaseVisitor<T> extends AbstractParseTreeVisitor<T> im
 	 * <p>The default implementation returns the result of calling
 	 * {@link #visitChildren} on {@code ctx}.</p>
 	 */
+	@Override public T visitXDeep(x_path_grammarParser.XDeepContext ctx) { return visitChildren(ctx); }
+	/**
+	 * {@inheritDoc}
+	 *
+	 * <p>The default implementation returns the result of calling
+	 * {@link #visitChildren} on {@code ctx}.</p>
+	 */
 	@Override public T visitForClause(x_path_grammarParser.ForClauseContext ctx) { return visitChildren(ctx); }
 	/**
 	 * {@inheritDoc}
