@@ -45,7 +45,7 @@ public class Utils {
 		NodeList children = root.getChildNodes();
         	for (int i = 0; i < children.getLength(); i++) 
 		{
-			if (children.item(i) instanceof Text)
+			if (children.item(i) instanceof Text && children.item(i).getTextContent().length()!=0)
 				pre.add(children.item(i).getTextContent());
 			else   
 			{
@@ -60,7 +60,7 @@ public class Utils {
 		pre.add("</"+nodename+">");
         	return;
    	}
-	else if (root instanceof Text) 
+	else if (root instanceof Text && root.getTextContent().length() != 0) 
 	{
 		pre.add(root.getTextContent());
 	}
@@ -73,11 +73,12 @@ public class Utils {
 	for(int i=0;i<nodes.size();i++)
 	{	
 		preorderTraversal(nodes.get(i), pre, 0,0);
-		for(int j=0;j<pre.size();j++)
+		if (pre.isEmpty() == false)
 		{
-			System.out.format("%s",pre.get(j));		
+			for(int j=0;j<pre.size();j++)
+				System.out.format("%s",pre.get(j));		
+			pre.clear();
 		}
-		pre.clear();
 	}
 	return;
   }
