@@ -25,6 +25,7 @@ public class Utils {
   public static void preorderTraversal(Node root, ArrayList<String> pre,int tabs, int maxtab)       
   {
 	String tab = "";
+	String attr = "";
 	for (int k=0;k <tabs; k++)
 		tab = tab+"\t";		
 	String nodename = "";
@@ -32,11 +33,16 @@ public class Utils {
 		return; 
 	if (root instanceof Element)
 	{
-
 		nodename = root.getNodeName();
 		pre.add("\n");
-        	pre.add(tab+"<"+nodename+">");
-        	NodeList children = root.getChildNodes();
+		NamedNodeMap attrs = root.getAttributes();
+        	for (int i = 0; i < attrs.getLength(); i++) 
+		{
+            		Attr attribute = (Attr) attrs.item(i);
+			attr = attr+" "+attribute.getName()+"=\""+attribute.getValue()+"\"";
+        	}
+        	pre.add(tab+"<"+nodename+attr+">");
+		NodeList children = root.getChildNodes();
         	for (int i = 0; i < children.getLength(); i++) 
 		{
 			if (children.item(i) instanceof Text)
