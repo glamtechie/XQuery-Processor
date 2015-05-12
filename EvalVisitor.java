@@ -53,7 +53,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
                 Document newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new FileInputStream(filename));
                 tree=newdoc;
                 ArrayList<Node> root=new ArrayList<Node>();
-                root.add(tree.getDocumentElement());
+                root.add(tree.getDocumentElement().getParentNode());
                 stack.push(root);
             }catch (Exception e){
                 e.printStackTrace();
@@ -78,7 +78,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             try{
                 Document newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(new FileInputStream(filename));
                 tree=newdoc;
-                ArrayList<Node> nodes = descOrSelf(tree.getDocumentElement());
+                ArrayList<Node> nodes = descOrSelf(tree.getDocumentElement().getParentNode());
                 stack.push(nodes);
             }catch (Exception e){
                 e.printStackTrace();
@@ -148,7 +148,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             NodeList list=curr.get(i).getChildNodes();
             for(int j=0; j<list.getLength(); j++){
                 Node node = list.item(j);
-                if(node instanceof Text){
+                if((node instanceof Text)){
                     result.add(node);
                 }
             }
@@ -417,7 +417,13 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     //var
     @Override
     public ArrayList<Node> visitXVar(x_path_grammarParser.XVarContext ctx){
-        Context c= ctxStack.peek();
+        Context c;
+        if (!ctxStack.empty()){
+            c= ctxStack.peek();
+        }
+        else{
+            return (new ArrayList<Node>());
+        }
         String s= ctx.var().Id().getText();
         ArrayList<Node> result=c.get(s);
         if (result!=null)
