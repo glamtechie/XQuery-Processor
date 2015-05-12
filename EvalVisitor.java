@@ -524,8 +524,10 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             tree=newdoc;
         ArrayList<Node> children=visit(ctx.xq());
         for(int i=0;i<children.size();i++){
-       		if(children.get(i) instanceof Attr)
-			node.setAttribute(children.get(i).getNodeName(),children.get(i).getTextContent());
+       		if(children.get(i) instanceof Attr){
+                Node x=newdoc.importNode(children.get(i),true);
+			    node.setAttribute(x.getNodeName(),x.getNodeValue());
+            }
 		else
 			node.appendChild(newdoc.importNode(children.get(i),true));
         }
