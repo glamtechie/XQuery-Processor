@@ -527,6 +527,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         try{
             newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
             Element node = newdoc.createElement(ctx.lt.getText());
+            newdoc.appendChild(node);
             tree=newdoc;
         ArrayList<Node> children=visit(ctx.xq());
         for(int i=0;i<children.size();i++){
