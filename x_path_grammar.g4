@@ -38,6 +38,7 @@ xq : var    #xVar
    | xq '/' rp      #xSlash
    | xq '//' rp   #xDeep
    | '<' lt=Id '>' '{' xq '}' '</' rt=Id '>'    #xNode
+   | forJ 'where' condJ 'return' returnJ #rewriteXq
    | forClause (letClause)? (whereClause)? returnClause #xState
    | letClause xq   #xLet
    | 'join' '(' left=xq ',' right=xq ',' leftlist=list ',' rightlist=list ')' #xJoin
@@ -46,6 +47,24 @@ xq : var    #xVar
 list : '[' id (',' id)* ']' ;
 
 id : Id ;
+
+forJ : 'for' var 'in' path (',' var 'in' path)*  #jfor ;
+
+path : ap #pathAp
+     | var '/' rp #pathSlash
+     | var '//' rp #pathDeep
+     ;
+
+condJ : left=var ('eq'|'=') right=var #jEq
+      | left=var ('eq'|'=') rt=String_constant #jEqS
+      | left=condJ 'and' right=condJ #jand
+      ;
+
+returnJ : var #jVar
+        | returnJ ',' returnJ #jInd
+        | '<' lt=Id '>' '{' returnJ '}' '</' rt=Id '>' #jNode
+        | path #jpath
+        ;
 
 forClause : 'for' var 'in' xq (',' var 'in' xq)* ;
 
