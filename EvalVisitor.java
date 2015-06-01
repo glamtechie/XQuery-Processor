@@ -10,6 +10,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     private Stack<ArrayList<Node>> stack;
     private Stack<Context> ctxStack;
     private Stack<ArrayList<Context>> ctxListStack;
+    private Stack<ArrayList<String>> stackDummy;
     private Document tree;
     //private HashMap<String,DomTree> treemap;
 
@@ -521,14 +522,19 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     //join(xq,xq,list1,list2)
     @Override
-    public ArrayList<Node>i visitXJoin(x_path_grammarParser.XJoinContext ctx){
+    public ArrayList<Node> visitXJoin(x_path_grammarParser.XJoinContext ctx)
+    {
+        System.out.println ("Inside Join\n");
+        ArrayList<Node> result=new ArrayList<Node>();
 	ArrayList<Node> xqFirst = visit(ctx.left);
 	ArrayList<Node> xqSecond = visit(ctx.right);
-	ArrayList<Node> firstList = visit(ctx.leftlist);
-	ArrayList<Node> secondList = visit(ctx.rightlist);
-	//TODO : Extract the lists from firstList and secondList
+	ArrayList<Node> firstGarbage = visit(ctx.leftlist);
+	ArrayList<Node> secondGarbage = visit(ctx.rightlist);
+
+	ArrayList<String> secondList = stackDummy.pop();
+        ArrayList<String> firstList = stackDummy.pop();
 	//Creating a new HashMap
-	Hashmap hm = new HashMap();
+        HashMap<ArrayList<String>,Node> hm = new HashMap<ArrayList<String>, Node>();
 	// Looping over all the entries in the result of xqFirst
 	for(int i=0; i<xqFirst.size();i++){
 	    //For every result in xqFirst, create a list of strings which contains joinList values
@@ -544,9 +550,6 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 		    }
 		} 
 	    }
-	    //Putting list of strings and tuple in the hashmap
-	    //TODO : Find out the type of key and value, here the key is of type list of strings 
-	    // and value is of type Node 
 	    hm.put(joinList, xqFirst.get(i));
 	}
 	for (int i=0 ; i<xqSecond.size();i++){
@@ -559,12 +562,12 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 		    }
 		}
 	    }
-	    //Find if the hashtable contains entries 
 	    if (hm.get(joinList)!= null ){
 		//TODO return the list and then both the tuples
-		return 
+		//result.add();	
 	    }
         }
+        return result;
     }
 
     //making node thing
@@ -667,14 +670,16 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     //list
     @Override
     public ArrayList<Node> visitList(x_path_grammarParser.ListContext ctx){
+        System.out.println ("Inside List\n");
         List<x_path_grammarParser.IdContext> variables=ctx.id();
-	ArrayList<Node> result= new ArrayList<Node>();
+	ArrayList<String> result= new ArrayList<String>();
+	ArrayList<Node> res= new ArrayList<Node>();
 	for( int i=0; i<variables.size();i++){
 	    result.add(variables.get(i).Id().getText());
 	}
-	//TODO
 	//return the list of nodes as form of arraylist of nodes
-	return result;
+	stackDummy.push(result);
+	return res;
     }
 
     //for
