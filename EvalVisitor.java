@@ -519,6 +519,50 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     }
 
+    //join(xq,xq,list1,list2)
+    @Override
+    public ArrayList<Node>i visitXJoin(x_path_grammarParser.XJoinContext ctx){
+	ArrayList<Node> xqFirst = visit(ctx.left);
+	ArrayList<Node> xqSecond = visit(ctx.right);
+	//assume firstList and secondLists are 2 lists on which join is performed
+	if (firstList.size() == secondListize()){
+	    //Creating a new HashMap
+	    Hashmap hm = new HashMap();
+	    // Looping over all the entries in the result of XQ1
+	    for(int i=0; i<xqFirst.size();i++){
+		//For every result in XQ1, create a list of strings which contains joinList values
+		ArrayList<String> joinList = new ArrayList<String>(); 
+		//To retrieve the join attribute values
+          	NodeList children = xqFirst.get(i).getChildNodes();
+                for (int j = children.getLength() - 1; j >=0 ; j--) {
+		    for (int k= 0; k < firstList.size(); k++){
+	                if (children.item(j).getNodeName() == firstList.get(k)){
+			    joinList.add(children.item(j).getNodeValue());
+			}
+		    }
+	        }
+		//Putting list of strings and tuple in the hashmap
+		hm.put(joinList, xqFirst.get(i));
+	    }
+	    for (int i=0 ; i<xqSecond.size();i++){
+		ArrayList<String> joinList = new ArrayList<String>(); 
+          	NodeList children = xqSecond.get(i).getChildNodes();
+                for (int j = children.getLength() - 1; j >=0 ; j--) {
+		    for (int k= 0; k < secondList.size(); k++){
+	                if (children.item(j).getNodeName() == secondList.get(k)){
+			    joinList.add(children.item(j).getNodeValue());
+			}
+		    }
+	        }
+		//Find if the hashtable contains entries 
+		if (hm.get(joinList)!= null ){
+			//return the list and then both the tuples
+			return 
+		}
+	    }
+        }
+    }
+
     //making node thing
     @Override
     public ArrayList<Node> visitXNode(x_path_grammarParser.XNodeContext ctx){
@@ -616,6 +660,18 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return result;
     }
 
+    //list
+    @Override
+    public ArrayList<Node> visitList(x_path_grammarParser.ListContext ctx){
+        List<x_path_grammarParser.IdContext> variables=ctx.id();
+	ArrayList<Node> result= new ArrayList<Node>();
+	for( int i=0; i<variables.size();i++){
+	    result.add(variables.get(i).Id().getText());
+	}
+	//return a list of all Id nodes 
+	return result;
+    }
+
     //for
     @Override
     public ArrayList<Node> visitForClause(x_path_grammarParser.ForClauseContext ctx){
@@ -659,6 +715,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             clist=temp;
         }
 
+	//return a list of all ID nodes 
         ctxListStack.push(clist);
         return null;
     }

@@ -40,7 +40,12 @@ xq : var    #xVar
    | '<' lt=Id '>' '{' xq '}' '</' rt=Id '>'    #xNode
    | forClause (letClause)? (whereClause)? returnClause #xState
    | letClause xq   #xLet
+   | 'join' '(' left=xq ',' right=xq ',' leftlist=list ',' rightlist=list ')' #xJoin
    ;
+
+list : '[' id (',' id)* ']' ;
+
+id : Id ;
 
 forClause : 'for' var 'in' xq (',' var 'in' xq)* ;
 
