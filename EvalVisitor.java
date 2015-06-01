@@ -19,7 +19,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         stack=new Stack<ArrayList<Node>>();
         ctxStack=new Stack<Context>();
         ctxListStack=new Stack<ArrayList<Context>>();
-        //treemap=new HashMap<String,DomTree>();
+        stackDummy = new Stack<ArrayList<String>>();
+	 //treemap=new HashMap<String,DomTree>();
         //tree=null;
         //this.tree=tree;
     }
@@ -524,7 +525,6 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitXJoin(x_path_grammarParser.XJoinContext ctx)
     {
-        System.out.println ("Inside Join\n");
         ArrayList<Node> result=new ArrayList<Node>();
 	ArrayList<Node> xqFirst = visit(ctx.left);
 	ArrayList<Node> xqSecond = visit(ctx.right);
@@ -538,15 +538,19 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 	// Looping over all the entries in the result of xqFirst
 	for(int i=0; i<xqFirst.size();i++){
 	    //For every result in xqFirst, create a list of strings which contains joinList values
-	    //TODO : find out if the values will always be string type?
 	    ArrayList<String> joinList = new ArrayList<String>(); 
 	    //To retrieve the join attribute values
             NodeList children = xqFirst.get(i).getChildNodes();
             for (int j = children.getLength() - 1; j >=0 ; j--) {
 	        for (int k= 0; k < firstList.size(); k++){
-	            if (children.item(j).getNodeName() == firstList.get(k)){
+		    //System.out.println("children.getNodeName "+children.item(j).getNodeName());
+		    //System.out.println("firstList.get(k) "+firstList.get(k));
+	            if (children.item(j).getNodeName().equals(firstList.get(k))){
 			//TODO : find if value is always of type string
-		        joinList.add(children.item(j).getNodeValue());
+            		NodeList grandChildren = children.item(j).getChildNodes();
+            		NodeList greatGrandChildren = grandChildren.item(0).getChildNodes();
+		        //System.out.println("grandchildren.getNodeName" +greatGrandChildren.item(0).getNodeValue());
+		        joinList.add(greatGrandChildren.item(0).getNodeValue());
 		    }
 		} 
 	    }
@@ -557,14 +561,17 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             NodeList children = xqSecond.get(i).getChildNodes();
             for (int j = children.getLength() - 1; j >=0 ; j--) {
 	        for (int k= 0; k < secondList.size(); k++){
-	            if (children.item(j).getNodeName() == secondList.get(k)){
-	    	        joinList.add(children.item(j).getNodeValue());
+	            if (children.item(j).getNodeName().equals(secondList.get(k))){
+            		NodeList grandChildren = children.item(j).getChildNodes();
+            		NodeList greatGrandChildren = grandChildren.item(0).getChildNodes();
+		        //System.out.println("SEcond loop grandchildren.getNodeValue" +greatGrandChildren.item(0).getNodeValue());
+		        joinList.add(greatGrandChildren.item(0).getNodeValue());
 		    }
 		}
 	    }
 	    if (hm.get(joinList)!= null ){
 		//TODO return the list and then both the tuples
-		//result.add();	
+		result.add();	
 	    }
         }
         return result;
@@ -670,11 +677,11 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     //list
     @Override
     public ArrayList<Node> visitList(x_path_grammarParser.ListContext ctx){
-        System.out.println ("Inside List\n");
+	ArrayList<Node> res= new ArrayList<Node>();
         List<x_path_grammarParser.IdContext> variables=ctx.id();
 	ArrayList<String> result= new ArrayList<String>();
-	ArrayList<Node> res= new ArrayList<Node>();
 	for( int i=0; i<variables.size();i++){
+	    System.out.println(variables.get(i).Id().getText());	
 	    result.add(variables.get(i).Id().getText());
 	}
 	//return the list of nodes as form of arraylist of nodes
