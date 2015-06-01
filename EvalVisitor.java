@@ -524,41 +524,45 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     public ArrayList<Node>i visitXJoin(x_path_grammarParser.XJoinContext ctx){
 	ArrayList<Node> xqFirst = visit(ctx.left);
 	ArrayList<Node> xqSecond = visit(ctx.right);
-	//assume firstList and secondLists are 2 lists on which join is performed
-	if (firstList.size() == secondListize()){
-	    //Creating a new HashMap
-	    Hashmap hm = new HashMap();
-	    // Looping over all the entries in the result of XQ1
-	    for(int i=0; i<xqFirst.size();i++){
-		//For every result in XQ1, create a list of strings which contains joinList values
-		ArrayList<String> joinList = new ArrayList<String>(); 
-		//To retrieve the join attribute values
-          	NodeList children = xqFirst.get(i).getChildNodes();
-                for (int j = children.getLength() - 1; j >=0 ; j--) {
-		    for (int k= 0; k < firstList.size(); k++){
-	                if (children.item(j).getNodeName() == firstList.get(k)){
-			    joinList.add(children.item(j).getNodeValue());
-			}
+	ArrayList<Node> firstList = visit(ctx.leftlist);
+	ArrayList<Node> secondList = visit(ctx.rightlist);
+	//TODO : Extract the lists from firstList and secondList
+	//Creating a new HashMap
+	Hashmap hm = new HashMap();
+	// Looping over all the entries in the result of xqFirst
+	for(int i=0; i<xqFirst.size();i++){
+	    //For every result in xqFirst, create a list of strings which contains joinList values
+	    //TODO : find out if the values will always be string type?
+	    ArrayList<String> joinList = new ArrayList<String>(); 
+	    //To retrieve the join attribute values
+            NodeList children = xqFirst.get(i).getChildNodes();
+            for (int j = children.getLength() - 1; j >=0 ; j--) {
+	        for (int k= 0; k < firstList.size(); k++){
+	            if (children.item(j).getNodeName() == firstList.get(k)){
+			//TODO : find if value is always of type string
+		        joinList.add(children.item(j).getNodeValue());
 		    }
-	        }
-		//Putting list of strings and tuple in the hashmap
-		hm.put(joinList, xqFirst.get(i));
+		} 
 	    }
-	    for (int i=0 ; i<xqSecond.size();i++){
-		ArrayList<String> joinList = new ArrayList<String>(); 
-          	NodeList children = xqSecond.get(i).getChildNodes();
-                for (int j = children.getLength() - 1; j >=0 ; j--) {
-		    for (int k= 0; k < secondList.size(); k++){
-	                if (children.item(j).getNodeName() == secondList.get(k)){
-			    joinList.add(children.item(j).getNodeValue());
-			}
+	    //Putting list of strings and tuple in the hashmap
+	    //TODO : Find out the type of key and value, here the key is of type list of strings 
+	    // and value is of type Node 
+	    hm.put(joinList, xqFirst.get(i));
+	}
+	for (int i=0 ; i<xqSecond.size();i++){
+	    ArrayList<String> joinList = new ArrayList<String>(); 
+            NodeList children = xqSecond.get(i).getChildNodes();
+            for (int j = children.getLength() - 1; j >=0 ; j--) {
+	        for (int k= 0; k < secondList.size(); k++){
+	            if (children.item(j).getNodeName() == secondList.get(k)){
+	    	        joinList.add(children.item(j).getNodeValue());
 		    }
-	        }
-		//Find if the hashtable contains entries 
-		if (hm.get(joinList)!= null ){
-			//return the list and then both the tuples
-			return 
 		}
+	    }
+	    //Find if the hashtable contains entries 
+	    if (hm.get(joinList)!= null ){
+		//TODO return the list and then both the tuples
+		return 
 	    }
         }
     }
@@ -668,7 +672,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 	for( int i=0; i<variables.size();i++){
 	    result.add(variables.get(i).Id().getText());
 	}
-	//return a list of all Id nodes 
+	//TODO
+	//return the list of nodes as form of arraylist of nodes
 	return result;
     }
 
