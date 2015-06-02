@@ -709,7 +709,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         List<x_path_grammarParser.IdContext> variables=ctx.id();
 	ArrayList<String> result= new ArrayList<String>();
 	for( int i=0; i<variables.size();i++){
-	    System.out.println(variables.get(i).Id().getText());	
+	    //System.out.println(variables.get(i).Id().getText());	
 	    result.add(variables.get(i).Id().getText());
 	}
 	//return the list of nodes as form of arraylist of nodes
