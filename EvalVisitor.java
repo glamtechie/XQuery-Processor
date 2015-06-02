@@ -571,7 +571,35 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 	    }
 	    if (hm.get(joinList)!= null ){
 		//TODO return the list and then both the tuples
-		result.add();	
+                try{ 
+		Document newdoc;
+            	newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                Element node = newdoc.createElement("tuple");
+                newdoc.appendChild(node);
+            	tree=newdoc;
+        	NodeList child=hm.get(joinList).getChildNodes();
+        	for(int j=0;j<child.getLength();j++){
+       			if(child.item(j) instanceof Attr){
+                		Node x=newdoc.importNode(child.item(j),true);
+			    	node.setAttribute(x.getNodeName(),x.getNodeValue());
+            		}
+			else
+				node.appendChild(newdoc.importNode(child.item(j),true));
+        	}
+        	NodeList childTwo=xqSecond.get(i).getChildNodes();
+        	for(int j=0;j<childTwo.getLength();j++){
+       			if(childTwo.item(j) instanceof Attr){
+                		Node x=newdoc.importNode(childTwo.item(j),true);
+			    	node.setAttribute(x.getNodeName(),x.getNodeValue());
+            		}
+			else
+				node.appendChild(newdoc.importNode(childTwo.item(j),true));
+        	}
+		result.add(node);
+		}catch (Exception ex) {
+    		    ex.printStackTrace();
+    		}
+
 	    }
         }
         return result;
