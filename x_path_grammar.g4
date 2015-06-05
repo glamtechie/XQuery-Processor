@@ -38,13 +38,12 @@ xq : var    #xVar
    | xq '/' rp      #xSlash
    | xq '//' rp   #xDeep
    | '<' lt=Id '>' '{' xq '}' '</' rt=Id '>'    #xNode
-   | forJ 'where' condJ 'return' returnJ #rewriteXq
    | forClause (letClause)? (whereClause)? returnClause #xState
    | letClause xq   #xLet
    | 'join' '(' left=xq ',' right=xq ',' leftlist=list ',' rightlist=list ')' #xJoin
    ;
 
-list : '[' id (',' id)* ']' ;
+list : '[' (id (',' id)*)* ']' ;
 
 id : Id ;
 
