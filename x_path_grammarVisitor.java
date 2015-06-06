@@ -157,6 +157,13 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitFAnd(x_path_grammarParser.FAndContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code rewriteXq}
+	 * labeled alternative in {@link x_path_grammarParser#oxq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitRewriteXq(x_path_grammarParser.RewriteXqContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code xInd}
 	 * labeled alternative in {@link x_path_grammarParser#xq}.
 	 * @param ctx the parse tree
@@ -199,6 +206,13 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 */
 	T visitXNode(x_path_grammarParser.XNodeContext ctx);
 	/**
+	 * Visit a parse tree produced by the {@code xJoin}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXJoin(x_path_grammarParser.XJoinContext ctx);
+	/**
 	 * Visit a parse tree produced by the {@code xSlash}
 	 * labeled alternative in {@link x_path_grammarParser#xq}.
 	 * @param ctx the parse tree
@@ -219,6 +233,73 @@ public interface x_path_grammarVisitor<T> extends ParseTreeVisitor<T> {
 	 * @return the visitor result
 	 */
 	T visitXStr(x_path_grammarParser.XStrContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code xDeep}
+	 * labeled alternative in {@link x_path_grammarParser#xq}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitXDeep(x_path_grammarParser.XDeepContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#list}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitList(x_path_grammarParser.ListContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#id}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitId(x_path_grammarParser.IdContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code jfor}
+	 * labeled alternative in {@link x_path_grammarParser#forJ}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJfor(x_path_grammarParser.JforContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code pathAp}
+	 * labeled alternative in {@link x_path_grammarParser#path}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPathAp(x_path_grammarParser.PathApContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code pathSlash}
+	 * labeled alternative in {@link x_path_grammarParser#path}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitPathSlash(x_path_grammarParser.PathSlashContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code jEq}
+	 * labeled alternative in {@link x_path_grammarParser#condJ}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJEq(x_path_grammarParser.JEqContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code jEqS}
+	 * labeled alternative in {@link x_path_grammarParser#condJ}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJEqS(x_path_grammarParser.JEqSContext ctx);
+	/**
+	 * Visit a parse tree produced by the {@code jand}
+	 * labeled alternative in {@link x_path_grammarParser#condJ}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitJand(x_path_grammarParser.JandContext ctx);
+	/**
+	 * Visit a parse tree produced by {@link x_path_grammarParser#returnJ}.
+	 * @param ctx the parse tree
+	 * @return the visitor result
+	 */
+	T visitReturnJ(x_path_grammarParser.ReturnJContext ctx);
 	/**
 	 * Visit a parse tree produced by {@link x_path_grammarParser#forClause}.
 	 * @param ctx the parse tree
