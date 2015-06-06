@@ -537,7 +537,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitXJoin(x_path_grammarParser.XJoinContext ctx)
     {
-	//System.out.println("Inside visitJoin");
+	System.out.println("Inside visitJoin");
         ArrayList<Node> result=new ArrayList<Node>();
 	ArrayList<Node> xqFirst = visit(ctx.left);
 	ArrayList<Node> xqSecond = visit(ctx.right);
@@ -1079,6 +1079,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitRewriteXq(x_path_grammarParser.RewriteXqContext ctx){
+        System.out.println("in rewrite");
         visit(ctx.forJ());
         visit(ctx.condJ());
         String returns=ctx.returnJ().getText();
@@ -1095,7 +1096,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
                 Set<Integer> setc=info.get(curr).join.keySet();
                  if(!setc.isEmpty()){
                     whom=setc.iterator().next();
-                    st.remove(whom);
+                    st.remove(new Integer(whom));
                  }
                  else{
                     whom=st.pop();
@@ -1147,7 +1148,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         if((st.size()==1) && sjoin!=null){
             //replace tokens here
             int n=st.pop();
-            String returnStatement=returns.replaceAll("$","$tuple/");
+            String returnStatement=returns.replaceAll("\\$","\\$tuple/");
             query="for $tuple in "+sjoin+Utils.makeWhere(n,info)+" return "+returnStatement;
 
         }
@@ -1208,11 +1209,14 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitPathSlash(x_path_grammarParser.PathSlashContext ctx) {
-        GraphNode g=new GraphNode(tablecount);
-        g.parent=ctx.var().Id().getText();
+
+        String parent=ctx.var().Id().getText();
+        int number=graph.get(parent).table;
+        GraphNode g=new GraphNode(number);
+        g.parent=parent;
         graph.put(curr_var,g);
-        graph.get(g.parent).children.add(curr_var);
-        TableNode t=info.get(tablecount);
+        graph.get(parent).children.add(curr_var);
+        TableNode t=info.get(number);
         t.fors.put("$"+curr_var,ctx.getText());
         return null;
 

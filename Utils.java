@@ -129,7 +129,7 @@ public class Utils {
 
   public static String makeElem(String s){
     StringBuffer e=new StringBuffer();
-    String var=s.replaceAll("$","");
+    String var=s.replaceAll("\\$","");
     e.append("<"+var+">{ ");
     e.append("$"+var);
     e.append(" }</"+var+">");
@@ -143,7 +143,7 @@ public class Utils {
       ret.append(", ");
       ret.append(makeElem(vars[i]));
     }
-    ret.append(" }<tuple>");
+    ret.append(" }</tuple>");
     return ret.toString();
   }
 
@@ -209,7 +209,7 @@ public class Utils {
 
   public static String makeList(ArrayList<String> vars){
     StringBuffer l=new StringBuffer("[ ");
-    if(vars.size()>0){
+    if((vars!=null) && (vars.size()>0)){
       l.append(vars.get(0));
       for(int i=1;i<vars.size();i++){
         l.append(", ");

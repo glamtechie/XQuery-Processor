@@ -1,7 +1,8 @@
 grammar x_path_grammar;
 
-r : xq
-  | oxq ;
+r : oxq | xq;
+
+
 
 ap : 'document' '("' tag=Id '")' '/' rp   #apSlash
    | 'document' '("' tag=Id '")' '//' rp  #apDeep
@@ -31,7 +32,7 @@ f : rp              #fRp
    | 'not' f       #fNot
    ;
 
-oxq: forJ 'where' condJ 'return' returnJ #rewriteXq;
+oxq: 'for' forJ 'where' condJ 'return' returnJ #rewriteXq;
 
 xq : var    #xVar
    | String_constant    #xStr
@@ -50,7 +51,7 @@ list : '[' (id (',' id)*)* ']' ;
 
 id : Id ;
 
-forJ : 'for' var 'in' path (',' var 'in' path)*  #jfor ;
+forJ : var 'in' path (',' var 'in' path)*  #jfor ;
 
 path : ap #pathAp
      | var ('/'|'//') rp #pathSlash
