@@ -46,7 +46,7 @@ xq : var    #xVar
    | 'join' '(' left=xq ',' right=xq ',' leftlist=list ',' rightlist=list ')' #xJoin
    ;
 
-list : '[' id (',' id)* ']' ;
+list : '[' (id (',' id)*)* ']' ;
 
 id : Id ;
 

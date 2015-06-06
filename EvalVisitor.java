@@ -537,6 +537,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitXJoin(x_path_grammarParser.XJoinContext ctx)
     {
+	//System.out.println("Inside visitJoin");
         ArrayList<Node> result=new ArrayList<Node>();
 	ArrayList<Node> xqFirst = visit(ctx.left);
 	ArrayList<Node> xqSecond = visit(ctx.right);
@@ -546,72 +547,133 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 	ArrayList<String> secondList = stackDummy.pop();
         ArrayList<String> firstList = stackDummy.pop();
 	//Creating a new HashMap
-        HashMap<ArrayList<String>,Node> hm = new HashMap<ArrayList<String>, Node>();
+        Map<ArrayList<String>,ArrayList<Node>> hm = new HashMap<ArrayList<String>, ArrayList<Node>>();
+        Map<ArrayList<String>,ArrayList<Node>> hmTwo = new HashMap<ArrayList<String>, ArrayList<Node>>();
 	// Looping over all the entries in the result of xqFirst
 	for(int i=0; i<xqFirst.size();i++){
 	    //For every result in xqFirst, create a list of strings which contains joinList values
+	    ArrayList<Node> hashMapVal ;
 	    ArrayList<String> joinList = new ArrayList<String>();
 	    //To retrieve the join attribute values
-            NodeList children = xqFirst.get(i).getChildNodes();
-            for (int j = children.getLength() - 1; j >=0 ; j--) {
-	        for (int k= 0; k < firstList.size(); k++){
-		    //System.out.println("children.getNodeName "+children.item(j).getNodeName());
-		    //System.out.println("firstList.get(k) "+firstList.get(k));
-	            if (children.item(j).getNodeName().equals(firstList.get(k))){
-			//TODO : find if value is always of type string
-            		NodeList grandChildren = children.item(j).getChildNodes();
-            		NodeList greatGrandChildren = grandChildren.item(0).getChildNodes();
-		        //System.out.println("grandchildren.getNodeName" +greatGrandChildren.item(0).getNodeValue());
-		        joinList.add(greatGrandChildren.item(0).getNodeValue());
+	    if (xqFirst.get(i)!= null){
+                NodeList children = xqFirst.get(i).getChildNodes();
+                for (int j = children.getLength() - 1; j >=0 ; j--) {
+	            for (int k= 0; k < firstList.size(); k++){
+		        //System.out.println("children.getNodeName "+children.item(j).getNodeName());
+		        //System.out.println("firstList.get(k) "+firstList.get(k));
+	                if (children.item(j)!= null && children.item(j).getNodeName()!= null && children.item(j).getNodeName().equals(firstList.get(k))){
+			    //TODO : find if value is always of type string
+            		    NodeList grandChildren = children.item(j).getChildNodes();
+			    if (grandChildren.getLength() > 0){
+            		        NodeList greatGrandChildren = grandChildren.item(0).getChildNodes();
+		                //System.out.println("grandchildren.getNodeName" +greatGrandChildren.item(0).getNodeValue());
+			    	if (greatGrandChildren.getLength() > 0)
+				    if (greatGrandChildren.item(0).getNodeValue()!=null)
+		                        joinList.add(greatGrandChildren.item(0).getNodeValue());
+			    }
+		        }
 		    }
-		}
-	    }
-	    hm.put(joinList, xqFirst.get(i));
-	}
-	for (int i=0 ; i<xqSecond.size();i++){
-	    ArrayList<String> joinList = new ArrayList<String>();
-            NodeList children = xqSecond.get(i).getChildNodes();
-            for (int j = children.getLength() - 1; j >=0 ; j--) {
-	        for (int k= 0; k < secondList.size(); k++){
-	            if (children.item(j).getNodeName().equals(secondList.get(k))){
-            		NodeList grandChildren = children.item(j).getChildNodes();
-            		NodeList greatGrandChildren = grandChildren.item(0).getChildNodes();
-		        //System.out.println("SEcond loop grandchildren.getNodeValue" +greatGrandChildren.item(0).getNodeValue());
-		        joinList.add(greatGrandChildren.item(0).getNodeValue());
-		    }
-		}
-	    }
+	        }
+   	    }
+	    //System.out.println("Length of joinList" + joinList.size());
 	    if (hm.get(joinList)!= null ){
-		//TODO return the list and then both the tuples
-                try{
-		Document newdoc;
-            	newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                Element node = newdoc.createElement("tuple");
-                newdoc.appendChild(node);
-            	tree=newdoc;
-        	NodeList child=hm.get(joinList).getChildNodes();
-        	for(int j=0;j<child.getLength();j++){
-       			if(child.item(j) instanceof Attr){
-                		Node x=newdoc.importNode(child.item(j),true);
-			    	node.setAttribute(x.getNodeName(),x.getNodeValue());
-            		}
-			else
-				node.appendChild(newdoc.importNode(child.item(j),true));
-        	}
-        	NodeList childTwo=xqSecond.get(i).getChildNodes();
-        	for(int j=0;j<childTwo.getLength();j++){
-       			if(childTwo.item(j) instanceof Attr){
-                		Node x=newdoc.importNode(childTwo.item(j),true);
-			    	node.setAttribute(x.getNodeName(),x.getNodeValue());
-            		}
-			else
-				node.appendChild(newdoc.importNode(childTwo.item(j),true));
-        	}
-		result.add(node);
-		}catch (Exception ex) {
-    		    ex.printStackTrace();
-    		}
+		hashMapVal = hm.get(joinList);
+	    }
+	    else{
+        	hashMapVal = new ArrayList<Node>();
+		String str = "";
+		for (int u=0; u< joinList.size(); u++){
+		    str = str + joinList.get(u);
+		}
+		//System.out.println("Joinlist in First Query "+str);
+	    }
+	    hashMapVal.add(xqFirst.get(i));
+	    hm.put(joinList, hashMapVal);
+	}
+	//System.out.println("Total number of nodes in second query "+xqSecond.size());
+	for(int i=0; i<xqSecond.size();i++){
+	    ArrayList<Node> hashMapVal ;
+	    ArrayList<String> joinList = new ArrayList<String>();
+	    if (xqSecond.get(i) != null){
+                NodeList children = xqSecond.get(i).getChildNodes();
+	        //System.out.println("Second query node number "+i+ " length of children "+children.getLength());
+                for (int j = children.getLength() - 1; j >=0 ; j--) {
+	    	    //System.out.println("query-node-child");
+	            for (int k= 0; k < secondList.size(); k++){
+		        //System.out.println("children.getNodeName "+children.item(j).getNodeName());
+		        //System.out.println("firstList.get(k) "+secondList.get(k));
+	                if (children.item(j)!= null && children.item(j).getNodeName()!= null && children.item(j).getNodeName().equals(secondList.get(k))){
+            		    NodeList grandChildren = children.item(j).getChildNodes();
+			    if (grandChildren.getLength() > 0){
+            		    	NodeList greatGrandChildren = grandChildren.item(0).getChildNodes();
+		            	//System.out.println("grandchildren.getNodeName" +greatGrandChildren.item(0).getNodeValue());
+			    	if (greatGrandChildren.getLength() > 0 )
+				    if (greatGrandChildren.item(0).getNodeValue()!=null)
+		            	        joinList.add(greatGrandChildren.item(0).getNodeValue());
+			    }
+		        }
+		    }
+	        }
+	    }
+	    if (hmTwo.get(joinList)!= null ){
+		hashMapVal = hmTwo.get(joinList);
+	    }
+	    else{
+        	hashMapVal = new ArrayList<Node>();
+		String str = "";
+		for (int u=0; u< joinList.size(); u++){
+		    str = str + joinList.get(u);    		}
+		//System.out.println("Joinlist in Second Query "+str);
+	    }
 
+	    hashMapVal.add(xqSecond.get(i));
+	    hmTwo.put(joinList, hashMapVal);
+	}
+
+
+        for(Map.Entry<ArrayList<String>, ArrayList<Node>> entry : hm.entrySet()){
+	    if (hmTwo.get(entry.getKey())!= null) {
+		//System.out.println("The entries in hashmaps match");
+	    	ArrayList<Node> listOne = entry.getValue();
+	    	ArrayList<Node> listTwo = hmTwo.get(entry.getKey());
+		for (int a=0; a<listOne.size(); a++){
+		    for (int b=0; b<listTwo.size(); b++){
+               		try{
+			Document newdoc;
+            		newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+                	Element node = newdoc.createElement("tuple");
+                	newdoc.appendChild(node);
+            		tree=newdoc;
+        		NodeList child=listOne.get(a).getChildNodes();
+			//System.out.println("Number of children in first query "+child.getLength());
+        		for(int j=0;j<child.getLength();j++){
+       				if(child.item(j) instanceof Attr){
+                			Node x=newdoc.importNode(child.item(j),true);
+			    		node.setAttribute(x.getNodeName(),x.getNodeValue());
+            			}
+				else
+					node.appendChild(newdoc.importNode(child.item(j),true));
+        		}
+        		NodeList childTwo=listTwo.get(b).getChildNodes();
+			//System.out.println("Number of children in second query "+childTwo.getLength());
+        		for(int j=0;j<childTwo.getLength();j++){
+       				if(childTwo.item(j) instanceof Attr){
+                			Node x=newdoc.importNode(childTwo.item(j),true);
+				    	node.setAttribute(x.getNodeName(),x.getNodeValue());
+            			}
+				else
+					node.appendChild(newdoc.importNode(childTwo.item(j),true));
+        		}
+			result.add(node);
+			NodeList childFinal = node.getChildNodes();
+			for (int f=0; f<childFinal.getLength() ; f++){
+				//System.out.println("ChildFinal "+childFinal.item(f).getNodeName());
+			}
+			}catch (Exception ex) {
+    	    		ex.printStackTrace();
+    			}
+		    }
+		}
 	    }
         }
         return result;
