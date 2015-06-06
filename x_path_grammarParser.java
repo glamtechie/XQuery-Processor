@@ -1571,7 +1571,7 @@ public class x_path_grammarParser extends Parser {
 		}
 	}
 	public static class JEqSContext extends CondJContext {
-		public VarContext left;
+		public VarContext lt;
 		public Token rt;
 		public VarContext var() {
 			return getRuleContext(VarContext.class,0);
@@ -1644,7 +1644,7 @@ public class x_path_grammarParser extends Parser {
 				_ctx = _localctx;
 				_prevctx = _localctx;
 				setState(231);
-				((JEqSContext)_localctx).left = var();
+				((JEqSContext)_localctx).lt = var();
 				setState(232);
 				_la = _input.LA(1);
 				if ( !(_la==T__15 || _la==T__16) ) {

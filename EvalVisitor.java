@@ -1254,7 +1254,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitJEqS(x_path_grammarParser.JEqSContext ctx) {
-        String var1=ctx.left.Id().getText();
+        String var1=ctx.lt.Id().getText();
         ArrayList<String> as=new ArrayList<String>();
         if(info.get(graph.get(var1).table).where.get("$"+var1)==null){
             as.add(ctx.rt.getText());

@@ -147,6 +147,7 @@ public class Utils {
     return ret.toString();
   }
 
+  //TODO
   public static String makeWhere(int n,HashMap<Integer,TableNode> info){
 
     //check if while exists
@@ -157,7 +158,7 @@ public class Utils {
       String[] conds=Arrays.asList(info.get(n).where.keySet().toArray()).toArray(new String[info.get(n).where.keySet().toArray().length]);
       where.append(conds[0]);
       where.append(" = ");
-      where.append(info.get(n).where.get(conds[0]));
+      where.append(info.get(n).where.get(conds[0]).get(0));
       for(int j=1;j<info.get(n).where.get(conds[0]).size();j++){
           where.append(" and ");
           where.append(conds[0]);

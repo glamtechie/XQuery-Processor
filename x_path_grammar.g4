@@ -58,7 +58,7 @@ path : ap #pathAp
      ;
 
 condJ : left=var ('eq'|'=') right=var #jEq
-      | left=var ('eq'|'=') rt=String_constant #jEqS
+      | lt=var ('eq'|'=') rt=String_constant #jEqS
       | left=condJ 'and' right=condJ #jand
       ;
 
