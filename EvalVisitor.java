@@ -3,6 +3,9 @@ import java.util.*;
 import org.antlr.v4.runtime.tree.*;
 import javax.xml.parsers.*;
 import java.io.FileInputStream;
+import org.antlr.v4.runtime.*;
+
+
 
 
 public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
@@ -12,6 +15,11 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     private Stack<ArrayList<Context>> ctxListStack;
     private Stack<ArrayList<String>> stackDummy;
     private Document tree;
+    //optimzation
+    private HashMap<String,GraphNode> graph;
+    private HashMap<Integer,TableNode> info;
+    private int tablecount;
+    private String curr_var;
     //private HashMap<String,DomTree> treemap;
 
     public EvalVisitor(){
@@ -23,6 +31,10 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 	 //treemap=new HashMap<String,DomTree>();
         //tree=null;
         //this.tree=tree;
+        graph=new HashMap<String,GraphNode>();
+        info=new HashMap<Integer,TableNode>();
+        tablecount=0;
+        curr_var="";
     }
 
     private ArrayList<Node> descOrSelf(Node n){
@@ -538,7 +550,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 	// Looping over all the entries in the result of xqFirst
 	for(int i=0; i<xqFirst.size();i++){
 	    //For every result in xqFirst, create a list of strings which contains joinList values
-	    ArrayList<String> joinList = new ArrayList<String>(); 
+	    ArrayList<String> joinList = new ArrayList<String>();
 	    //To retrieve the join attribute values
             NodeList children = xqFirst.get(i).getChildNodes();
             for (int j = children.getLength() - 1; j >=0 ; j--) {
@@ -552,12 +564,12 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 		        //System.out.println("grandchildren.getNodeName" +greatGrandChildren.item(0).getNodeValue());
 		        joinList.add(greatGrandChildren.item(0).getNodeValue());
 		    }
-		} 
+		}
 	    }
 	    hm.put(joinList, xqFirst.get(i));
 	}
 	for (int i=0 ; i<xqSecond.size();i++){
-	    ArrayList<String> joinList = new ArrayList<String>(); 
+	    ArrayList<String> joinList = new ArrayList<String>();
             NodeList children = xqSecond.get(i).getChildNodes();
             for (int j = children.getLength() - 1; j >=0 ; j--) {
 	        for (int k= 0; k < secondList.size(); k++){
@@ -571,7 +583,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 	    }
 	    if (hm.get(joinList)!= null ){
 		//TODO return the list and then both the tuples
-                try{ 
+                try{
 		Document newdoc;
             	newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
                 Element node = newdoc.createElement("tuple");
@@ -709,7 +721,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         List<x_path_grammarParser.IdContext> variables=ctx.id();
 	ArrayList<String> result= new ArrayList<String>();
 	for( int i=0; i<variables.size();i++){
-	    //System.out.println(variables.get(i).Id().getText());	
+	    //System.out.println(variables.get(i).Id().getText());
 	    result.add(variables.get(i).Id().getText());
 	}
 	//return the list of nodes as form of arraylist of nodes
@@ -760,7 +772,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
             clist=temp;
         }
 
-	//return a list of all ID nodes 
+	//return a list of all ID nodes
         ctxListStack.push(clist);
         return null;
     }
@@ -1003,4 +1015,195 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return visit(ctx.xq());
     }
 
+    @Override
+    public ArrayList<Node> visitRewriteXq(x_path_grammarParser.RewriteXqContext ctx){
+        visit(ctx.forJ());
+        visit(ctx.condJ());
+        String returns=ctx.returnJ().getText();
+        String sjoin=null;
+        LinkedList<Integer> st= new LinkedList<Integer>();
+        st.addAll(info.keySet());
+        //can manipulate how entries are added to the stack to implement selection pushdown
+
+        while(st.size()>1){
+
+            int curr=st.pop();
+            int whom;
+
+                Set<Integer> setc=info.get(curr).join.keySet();
+                 if(!setc.isEmpty()){
+                    whom=setc.iterator().next();
+                    st.remove(whom);
+                 }
+                 else{
+                    whom=st.pop();
+                 }
+
+                if(sjoin==null){
+                    sjoin=Utils.constructJoin(info, curr, whom,null);
+                }
+                else{
+                    sjoin=Utils.constructJoin(info,curr, whom,sjoin);
+                }
+                //remove join edges
+                if(info.get(curr).join.get(whom)!=null)
+                    info.get(curr).join.remove(whom);
+                if(info.get(whom).join.get(curr)!=null)
+                    info.get(whom).join.remove(curr);
+                //create new node
+                info=Utils.createNode(info,curr,whom);
+
+                //correct edges
+                //curr
+                int news=(-1*curr*10)+whom;
+                Integer[] keys=Arrays.asList(setc.toArray()).toArray(new Integer[setc.toArray().length]);
+                for (int k:keys){
+                    info.get(k).join.put(news,info.get(k).join.get(curr));
+                    info.get(k).join.remove(curr);
+                }
+
+                //whom
+                Set<Integer> setw=info.get(whom).join.keySet();
+                keys=Arrays.asList(setw.toArray()).toArray(new Integer[setw.toArray().length]);
+                for (int k:keys){
+                    if(info.get(k).join.containsKey(news)){
+                        info.get(k).join.get(news).addAll(info.get(k).join.get(whom));
+                    }
+                    else{
+                        info.get(k).join.put(news,info.get(k).join.get(whom));
+                    }
+                    info.get(k).join.remove(whom);
+                }
+
+                //delete old nodes
+                info.remove(curr);
+                info.remove(whom);
+                st.addFirst(news);
+
+        }
+        String query;
+        if((st.size()==1) && sjoin!=null){
+            //replace tokens here
+            int n=st.pop();
+            String returnStatement=returns.replaceAll("$","$tuple/");
+            query="for $tuple in "+sjoin+Utils.makeWhere(n,info)+" return "+returnStatement;
+
+        }
+        else{
+            //add dummy let clause to avoid infinite loop
+            int n=st.pop();
+            query="let $pooja=\"n\" "+ctx.forJ().getText()+Utils.makeWhere(n,info)+" return "+returns;
+        }
+
+        //execute query
+    System.out.println(query);
+    ANTLRInputStream inputq = new ANTLRInputStream(query); //"document(\"j_caesar.xml\")/TITLE");
+
+    // create a lexer that feeds off of input CharStream
+    x_path_grammarLexer lexerq = new x_path_grammarLexer(inputq);
+
+    // create a buffer of tokens pulled from the lexer
+    CommonTokenStream tokensq = new CommonTokenStream(lexerq);
+
+    x_path_grammarParser parserq=new x_path_grammarParser(tokensq);
+    ParseTree treeq = parserq.r();
+
+
+    EvalVisitor evalq = new EvalVisitor();
+
+    ArrayList<Node> result=evalq.visit(treeq);
+    if (result==null){
+        result=new ArrayList<Node>();
+    }
+    return result;
+
+    }
+
+    @Override
+    public ArrayList<Node> visitJfor(x_path_grammarParser.JforContext ctx) {
+
+        List<x_path_grammarParser.VarContext> variables=ctx.var();
+        List<x_path_grammarParser.PathContext> paths=ctx.path();
+
+        for(int i=0;i<variables.size();i++){
+            curr_var=variables.get(i).Id().getText();
+            visit(paths.get(i));
+        }
+        return null;
+    }
+
+
+
+    @Override
+    public ArrayList<Node> visitPathAp(x_path_grammarParser.PathApContext ctx){
+        tablecount++;
+        graph.put(curr_var,new GraphNode(tablecount));
+        TableNode t=new TableNode();
+        t.fors.put("$"+curr_var,ctx.getText());
+        info.put(tablecount,t);
+        return null;
+    }
+
+    @Override
+    public ArrayList<Node> visitPathSlash(x_path_grammarParser.PathSlashContext ctx) {
+        GraphNode g=new GraphNode(tablecount);
+        g.parent=ctx.var().Id().getText();
+        graph.put(curr_var,g);
+        graph.get(g.parent).children.add(curr_var);
+        TableNode t=info.get(tablecount);
+        t.fors.put("$"+curr_var,ctx.getText());
+        return null;
+
+    }
+
+    @Override
+    public ArrayList<Node> visitJEq(x_path_grammarParser.JEqContext ctx) {
+        String var1=ctx.left.Id().getText();
+        String var2=ctx.right.Id().getText();
+        int table1=graph.get(var1).table;
+        int table2=graph.get(var2).table;
+        if (table1==table2){
+            ArrayList<String> as=new ArrayList<String>();
+            if(info.get(table1).where.get("$"+var1)==null){
+                as.add("$"+var2);
+                info.get(table1).where.put("$"+var1,as);}
+            else
+                info.get(table1).where.get("$"+var1).add("$"+var2);
+        }
+        else{
+            ArrayList<String> j=info.get(table1).join.get(table2);
+            if (j!=null){
+                j.add(var1);
+                info.get(table2).join.get(table1).add(var2);
+            }
+            else{
+                info.get(table1).join.put(new Integer(table2),new ArrayList<String>());
+                info.get(table1).join.get(table2).add(var1);
+                info.get(table2).join.put(new Integer(table1),new ArrayList<String>());
+                info.get(table2).join.get(table1).add(var2);
+            }
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Node> visitJEqS(x_path_grammarParser.JEqSContext ctx) {
+        String var1=ctx.left.Id().getText();
+        ArrayList<String> as=new ArrayList<String>();
+        if(info.get(graph.get(var1).table).where.get("$"+var1)==null){
+            as.add(ctx.rt.getText());
+            info.get(graph.get(var1).table).where.put("$"+var1,as);
+        }
+        else{
+            info.get(graph.get(var1).table).where.get("$"+var1).add(ctx.rt.getText());
+        }
+        return null;
+    }
+
+    @Override
+    public ArrayList<Node> visitJand(x_path_grammarParser.JandContext ctx) {
+        visit(ctx.left);
+        visit(ctx.right);
+        return null;
+    }
 }

@@ -1,6 +1,7 @@
 grammar x_path_grammar;
 
-r : xq ;
+r : xq
+  | oxq ;
 
 ap : 'document' '("' tag=Id '")' '/' rp   #apSlash
    | 'document' '("' tag=Id '")' '//' rp  #apDeep
@@ -30,6 +31,8 @@ f : rp              #fRp
    | 'not' f       #fNot
    ;
 
+oxq: forJ 'where' condJ 'return' returnJ #rewriteXq;
+
 xq : var    #xVar
    | String_constant    #xStr
    | ap     #xAp
@@ -38,7 +41,6 @@ xq : var    #xVar
    | xq '/' rp      #xSlash
    | xq '//' rp   #xDeep
    | '<' lt=Id '>' '{' xq '}' '</' rt=Id '>'    #xNode
-   | forJ 'where' condJ 'return' returnJ #rewriteXq
    | forClause (letClause)? (whereClause)? returnClause #xState
    | letClause xq   #xLet
    | 'join' '(' left=xq ',' right=xq ',' leftlist=list ',' rightlist=list ')' #xJoin
@@ -51,8 +53,7 @@ id : Id ;
 forJ : 'for' var 'in' path (',' var 'in' path)*  #jfor ;
 
 path : ap #pathAp
-     | var '/' rp #pathSlash
-     | var '//' rp #pathDeep
+     | var ('/'|'//') rp #pathSlash
      ;
 
 condJ : left=var ('eq'|'=') right=var #jEq
@@ -60,10 +61,10 @@ condJ : left=var ('eq'|'=') right=var #jEq
       | left=condJ 'and' right=condJ #jand
       ;
 
-returnJ : var #jVar
-        | returnJ ',' returnJ #jInd
-        | '<' lt=Id '>' '{' returnJ '}' '</' rt=Id '>' #jNode
-        | path #jpath
+returnJ : var
+        | returnJ ',' returnJ
+        | '<' lt=Id '>' '{' returnJ '}' '</' rt=Id '>'
+        | path
         ;
 
 forClause : 'for' var 'in' xq (',' var 'in' xq)* ;
