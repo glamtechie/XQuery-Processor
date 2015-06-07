@@ -1125,7 +1125,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         if((st.size()==1) && sjoin!=null){
             //replace tokens here
             int n=st.pop();
-            String rem=returns.replaceFirst("/","/\\*/");
+            // String rem=returns.replaceFirst("/","/\\*/");
+            String rem = returns.replaceAll ("\\$([a-z]+)", "\\$$1/*");
             String returnStatement=rem.replaceAll("\\$","\\$tuple/");
             query="for $tuple in "+sjoin+Utils.makeWhere(n,info)+" return "+returnStatement;
 
