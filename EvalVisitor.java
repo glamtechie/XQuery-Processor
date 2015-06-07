@@ -537,148 +537,125 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
     @Override
     public ArrayList<Node> visitXJoin(x_path_grammarParser.XJoinContext ctx)
     {
-	System.out.println("Inside visitJoin");
-        ArrayList<Node> result=new ArrayList<Node>();
-	ArrayList<Node> xqFirst = visit(ctx.left);
-	ArrayList<Node> xqSecond = visit(ctx.right);
-	ArrayList<Node> firstGarbage = visit(ctx.leftlist);
-	ArrayList<Node> secondGarbage = visit(ctx.rightlist);
+	   ArrayList<Node> table1=visit(ctx.left);
+       ArrayList<Node> table2=visit(ctx.right);
+       List<x_path_grammarParser.IdContext> l1=ctx.leftlist.id();
+       ArrayList<String> join1=new ArrayList<String>();
+       for(int i=0;i<l1.size();i++){
+            join1.add(l1.get(i).getText());
+       }
+       List<x_path_grammarParser.IdContext> l2=ctx.rightlist.id();
+       ArrayList<String> join2=new ArrayList<String>();
+       for(int i=0;i<l2.size();i++){
+            join2.add(l2.get(i).getText());
+       }
+       HashMap<NodeWrapper,ArrayList<Node>> jtable=new HashMap<NodeWrapper,ArrayList<Node>>();
+       ArrayList<Node> result=new ArrayList<Node>();
+       //populate table
+       if(join1.size()>0){
+           for(Node n:table1){
+            ArrayList<Node> key=new ArrayList<Node>();
+            Element e=(Element)n;
+            for(String s:join1){
+                Node x=e.getElementsByTagName(s).item(0);
+                if (x.getChildNodes().getLength()>0)
+                    key.add(x.getChildNodes().item(0));
+            }
 
-	ArrayList<String> secondList = stackDummy.pop();
-        ArrayList<String> firstList = stackDummy.pop();
-	//Creating a new HashMap
-        Map<ArrayList<String>,ArrayList<Node>> hm = new HashMap<ArrayList<String>, ArrayList<Node>>();
-        Map<ArrayList<String>,ArrayList<Node>> hmTwo = new HashMap<ArrayList<String>, ArrayList<Node>>();
-	// Looping over all the entries in the result of xqFirst
-	for(int i=0; i<xqFirst.size();i++){
-	    //For every result in xqFirst, create a list of strings which contains joinList values
-	    ArrayList<Node> hashMapVal ;
-	    ArrayList<String> joinList = new ArrayList<String>();
-	    //To retrieve the join attribute values
-	    if (xqFirst.get(i)!= null){
-                NodeList children = xqFirst.get(i).getChildNodes();
-                for (int j = children.getLength() - 1; j >=0 ; j--) {
-	            for (int k= 0; k < firstList.size(); k++){
-		        //System.out.println("children.getNodeName "+children.item(j).getNodeName());
-		        //System.out.println("firstList.get(k) "+firstList.get(k));
-	                if (children.item(j)!= null && children.item(j).getNodeName()!= null && children.item(j).getNodeName().equals(firstList.get(k))){
-			    //TODO : find if value is always of type string
-            		    NodeList grandChildren = children.item(j).getChildNodes();
-			    if (grandChildren.getLength() > 0){
-            		        NodeList greatGrandChildren = grandChildren.item(0).getChildNodes();
-		                //System.out.println("grandchildren.getNodeName" +greatGrandChildren.item(0).getNodeValue());
-			    	if (greatGrandChildren.getLength() > 0)
-				    if (greatGrandChildren.item(0).getNodeValue()!=null)
-		                        joinList.add(greatGrandChildren.item(0).getNodeValue());
-			    }
-		        }
-		    }
-	        }
-   	    }
-	    //System.out.println("Length of joinList" + joinList.size());
-	    if (hm.get(joinList)!= null ){
-		hashMapVal = hm.get(joinList);
-	    }
-	    else{
-        	hashMapVal = new ArrayList<Node>();
-		String str = "";
-		for (int u=0; u< joinList.size(); u++){
-		    str = str + joinList.get(u);
-		}
-		//System.out.println("Joinlist in First Query "+str);
-	    }
-	    hashMapVal.add(xqFirst.get(i));
-	    hm.put(joinList, hashMapVal);
-	}
-	//System.out.println("Total number of nodes in second query "+xqSecond.size());
-	for(int i=0; i<xqSecond.size();i++){
-	    ArrayList<Node> hashMapVal ;
-	    ArrayList<String> joinList = new ArrayList<String>();
-	    if (xqSecond.get(i) != null){
-                NodeList children = xqSecond.get(i).getChildNodes();
-	        //System.out.println("Second query node number "+i+ " length of children "+children.getLength());
-                for (int j = children.getLength() - 1; j >=0 ; j--) {
-	    	    //System.out.println("query-node-child");
-	            for (int k= 0; k < secondList.size(); k++){
-		        //System.out.println("children.getNodeName "+children.item(j).getNodeName());
-		        //System.out.println("firstList.get(k) "+secondList.get(k));
-	                if (children.item(j)!= null && children.item(j).getNodeName()!= null && children.item(j).getNodeName().equals(secondList.get(k))){
-            		    NodeList grandChildren = children.item(j).getChildNodes();
-			    if (grandChildren.getLength() > 0){
-            		    	NodeList greatGrandChildren = grandChildren.item(0).getChildNodes();
-		            	//System.out.println("grandchildren.getNodeName" +greatGrandChildren.item(0).getNodeValue());
-			    	if (greatGrandChildren.getLength() > 0 )
-				    if (greatGrandChildren.item(0).getNodeValue()!=null)
-		            	        joinList.add(greatGrandChildren.item(0).getNodeValue());
-			    }
-		        }
-		    }
-	        }
-	    }
-	    if (hmTwo.get(joinList)!= null ){
-		hashMapVal = hmTwo.get(joinList);
-	    }
-	    else{
-        	hashMapVal = new ArrayList<Node>();
-		String str = "";
-		for (int u=0; u< joinList.size(); u++){
-		    str = str + joinList.get(u);    		}
-		//System.out.println("Joinlist in Second Query "+str);
-	    }
+            NodeWrapper nw=new NodeWrapper(key);
+            if (!jtable.containsKey(nw)){
+                ArrayList<Node> val=new ArrayList<Node>();
+                val.add(n);
+                jtable.put(nw,val);
+            }
+            else{
+                jtable.get(nw).add(n);
+            }
 
-	    hashMapVal.add(xqSecond.get(i));
-	    hmTwo.put(joinList, hashMapVal);
-	}
+           }
 
-
-        for(Map.Entry<ArrayList<String>, ArrayList<Node>> entry : hm.entrySet()){
-	    if (hmTwo.get(entry.getKey())!= null) {
-		//System.out.println("The entries in hashmaps match");
-	    	ArrayList<Node> listOne = entry.getValue();
-	    	ArrayList<Node> listTwo = hmTwo.get(entry.getKey());
-		for (int a=0; a<listOne.size(); a++){
-		    for (int b=0; b<listTwo.size(); b++){
-               		try{
-			Document newdoc;
-            		newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
-                	Element node = newdoc.createElement("tuple");
-                	newdoc.appendChild(node);
-            		tree=newdoc;
-        		NodeList child=listOne.get(a).getChildNodes();
-			//System.out.println("Number of children in first query "+child.getLength());
-        		for(int j=0;j<child.getLength();j++){
-       				if(child.item(j) instanceof Attr){
-                			Node x=newdoc.importNode(child.item(j),true);
-			    		node.setAttribute(x.getNodeName(),x.getNodeValue());
-            			}
-				else
-					node.appendChild(newdoc.importNode(child.item(j),true));
-        		}
-        		NodeList childTwo=listTwo.get(b).getChildNodes();
-			//System.out.println("Number of children in second query "+childTwo.getLength());
-        		for(int j=0;j<childTwo.getLength();j++){
-       				if(childTwo.item(j) instanceof Attr){
-                			Node x=newdoc.importNode(childTwo.item(j),true);
-				    	node.setAttribute(x.getNodeName(),x.getNodeValue());
-            			}
-				else
-					node.appendChild(newdoc.importNode(childTwo.item(j),true));
-        		}
-			result.add(node);
-			NodeList childFinal = node.getChildNodes();
-			for (int f=0; f<childFinal.getLength() ; f++){
-				//System.out.println("ChildFinal "+childFinal.item(f).getNodeName());
-			}
-			}catch (Exception ex) {
-    	    		ex.printStackTrace();
-    			}
-		    }
-		}
-	    }
+           for(Node n:table2){
+                ArrayList<Node> key=new ArrayList<Node>();
+                Element e=(Element)n;
+                //System.out.println(e.getNodeName());
+                //System.out.println(e.getChildNodes().item(0).getNodeName());
+                //System.out.println(e.getChildNodes().item(1).getNodeName());
+                for(String s:join2){
+                    //System.out.println(e.getElementsByTagName(s).item(0));
+                    Node x=e.getElementsByTagName(s).item(0);
+                    key.add(x.getChildNodes().item(0));
+                }
+                NodeWrapper nw=new NodeWrapper(key);
+                //System.out.println(key);
+                if(jtable.containsKey(nw)){
+                    //System.out.println("key found");
+                    ArrayList<Node> vals=jtable.get(nw);
+                    for(Node v:vals){
+                        Node b=n.cloneNode(true);
+                        result.add(makeNode("tuple",v,b));
+                    }
+                }
+            }
         }
+        else{
+            //crossproduct
+            for(Node a:table1){
+                for(Node b:table2){
+                    Node c=b.cloneNode(true);
+                    result.add(makeNode("tuple",a,b));
+                }
+            }
+        }
+
         return result;
     }
 
+    public Node makeNode(String name,Node a, Node b){
+        //Document newdoc;
+        //Element node=null;
+        try{
+            //newdoc = DocumentBuilderFactory.newInstance().newDocumentBuilder().newDocument();
+            //node = newdoc.createElement(name);
+            //newdoc.appendChild(node);
+            NodeList children1=a.getChildNodes();
+            for(int i=0;i<children1.getLength();i++){
+                //set children to child's children
+                //get old child
+                //System.out.println(children1.item(i));
+                /*
+                NodeList old1=children1.item(i).getChildNodes();
+                for(int k=0;k<old1.getLength();k++){
+                    NodeList newchildren1=old1.get(k).getChildNodes();
+                    for(int j=0;j<newchildren1.getLength();j++){
+                        children1.item(i).appendChild(children1.item(i).getOwnerDocument().importNode(newchildren1.item(j),true));
+                    }
+                //remove oldchild
+                children1.item(i).removeChild(old1.item(k));
+            }
+                */
+                b.appendChild(b.getOwnerDocument().importNode(children1.item(i),true));
+            }
+            /*
+            NodeList children2=b.getChildNodes();
+            for(int i=0;i<children2.getLength();i++){
+
+                NodeList old2=children2.item(i).getChildNodes();
+                for(int k=0;k<old2.getLength();k++){
+                    NodeList newchildren2=old2.get(k).getChildNodes();
+                    for(int j=0;j<newchildren2.getLength();j++){
+                        children2.item(i).appendChild(children2.item(i).getOwnerDocument().importNode(newchildren2.item(j),true));
+                    }
+                //remove oldchild
+                children2.item(i).removeChild(old2.item(k));
+                }
+                node.appendChild(newdoc.importNode(children2.item(i),true));
+            }*/
+        }catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return b;
+
+    }
     //making node thing
     @Override
     public ArrayList<Node> visitXNode(x_path_grammarParser.XNodeContext ctx){
@@ -1148,7 +1125,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         if((st.size()==1) && sjoin!=null){
             //replace tokens here
             int n=st.pop();
-            String returnStatement=returns.replaceAll("\\$","\\$tuple/");
+            String rem=returns.replaceFirst("/","/\\*/");
+            String returnStatement=rem.replaceAll("\\$","\\$tuple/");
             query="for $tuple in "+sjoin+Utils.makeWhere(n,info)+" return "+returnStatement;
 
         }

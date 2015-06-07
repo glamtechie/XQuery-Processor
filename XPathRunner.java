@@ -37,7 +37,7 @@ public class XPathRunner{
             System.out.println(n.getTextContent());
         }
     }*/
-
+    System.out.println(result.size());
     //System.out.println("\n");
 }
 }

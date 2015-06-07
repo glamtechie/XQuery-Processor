@@ -11,28 +11,37 @@ public class NodeWrapper {
 
   @Override
   public boolean equals (Object _nodeWrapperObj) {
+
     assert (_nodeWrapperObj instanceof NodeWrapper);
     List<Node> _nodeList = ((NodeWrapper) _nodeWrapperObj).nodeList;
     assert _nodeList.size() == this.nodeList.size();
 
     // Compare each node individually
     for (int i = 0; i < this.nodeList.size(); i++) {
-      Node node1 = this.nodeList.get (i);
-      Node nodeOther = _nodeList.get (i);
+
+      Node node1 = this.nodeList.get(i);
+      //System.out.println(node1);
+      Node nodeOther = _nodeList.get(i);
+      //System.out.println(nodeOther);
 
       if (!node1.isEqualNode (nodeOther)) {
         return false;
       }
     }
+    //System.out.println("equals");
     return true;
   }
 
   @Override
   public int hashCode () {
-    int hashCode = 0;
+    int hashCode = 31;
     for (Node node : this.nodeList) {
-      hashCode += node.getTextContent().hashCode();
+      String con=node.getTextContent();
+      if(con!=null){
+        hashCode += con.hashCode();
+      }
     }
-    return hashCode;
+    return 1;
   }
+
 }
