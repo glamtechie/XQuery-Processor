@@ -583,7 +583,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
                 for(String s:join2){
                     //System.out.println(e.getElementsByTagName(s).item(0));
                     Node x=e.getElementsByTagName(s).item(0);
-                    key.add(x.getChildNodes().item(0));
+                    if (x.getChildNodes().getLength()>0)
+                        key.add(x.getChildNodes().item(0));
                 }
                 NodeWrapper nw=new NodeWrapper(key);
                 //System.out.println(key);
