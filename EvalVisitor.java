@@ -1139,11 +1139,11 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
         //execute query
     //System.out.println(query);
+
     Writer writer = null;
 
     try {
-        writer = new BufferedWriter(new OutputStreamWriter(
-              new FileOutputStream("newquery.txt"), "utf-8"));
+        writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("newquery.txt"), "utf-8"));
         writer.write(query);
     } catch (IOException ex) {
       ex.printStackTrace();
