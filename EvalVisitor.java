@@ -2,7 +2,7 @@ import org.w3c.dom.*;
 import java.util.*;
 import org.antlr.v4.runtime.tree.*;
 import javax.xml.parsers.*;
-import java.io.FileInputStream;
+import java.io.*;
 import org.antlr.v4.runtime.*;
 
 
@@ -1057,7 +1057,6 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitRewriteXq(x_path_grammarParser.RewriteXqContext ctx){
-        System.out.println("in rewrite");
         visit(ctx.forJ());
         visit(ctx.condJ());
         String returns=ctx.returnJ().getText();
@@ -1139,7 +1138,18 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         }
 
         //execute query
-    System.out.println(query);
+    //System.out.println(query);
+    Writer writer = null;
+
+    try {
+        writer = new BufferedWriter(new OutputStreamWriter(
+              new FileOutputStream("newquery.txt"), "utf-8"));
+        writer.write(query);
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } finally {
+       try {writer.close();} catch (Exception ex) {/*ignore*/}
+    }
     ANTLRInputStream inputq = new ANTLRInputStream(query); //"document(\"j_caesar.xml\")/TITLE");
 
     // create a lexer that feeds off of input CharStream
