@@ -108,7 +108,6 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         return Utils.getUnique(visit(ctx.rp())); //put unique?
     }
 
-
     //Relative
     //rp/rp
     @Override
