@@ -62,10 +62,11 @@ condJ : left=var ('eq'|'=') right=var #jEq
       | left=condJ 'and' right=condJ #jand
       ;
 
-returnJ : var
+returnJ :path
+        |  var
+        | '(' returnJ ')'',' '(' returnJ ')'
         | returnJ ',' returnJ
         | '<' lt=Id '>' '{' returnJ '}' '</' rt=Id '>'
-        | path
         ;
 
 forClause : 'for' var 'in' xq (',' var 'in' xq)* ;

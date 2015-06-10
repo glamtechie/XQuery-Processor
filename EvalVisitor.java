@@ -2,7 +2,7 @@ import org.w3c.dom.*;
 import java.util.*;
 import org.antlr.v4.runtime.tree.*;
 import javax.xml.parsers.*;
-import java.io.FileInputStream;
+import java.io.*;
 import org.antlr.v4.runtime.*;
 
 
@@ -582,7 +582,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
                 for(String s:join2){
                     //System.out.println(e.getElementsByTagName(s).item(0));
                     Node x=e.getElementsByTagName(s).item(0);
-                    key.add(x.getChildNodes().item(0));
+                    if (x.getChildNodes().getLength()>0)
+                        key.add(x.getChildNodes().item(0));
                 }
                 NodeWrapper nw=new NodeWrapper(key);
                 //System.out.println(key);
@@ -1055,7 +1056,6 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
 
     @Override
     public ArrayList<Node> visitRewriteXq(x_path_grammarParser.RewriteXqContext ctx){
-        System.out.println("in rewrite");
         visit(ctx.forJ());
         visit(ctx.condJ());
         String returns=ctx.returnJ().getText();
@@ -1124,7 +1124,8 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         if((st.size()==1) && sjoin!=null){
             //replace tokens here
             int n=st.pop();
-            String rem=returns.replaceFirst("/","/\\*/");
+            // String rem=returns.replaceFirst("/","/\\*/");
+            String rem = returns.replaceAll ("\\$([_A-Za-z0-9]*)", "\\$$1/\\*");
             String returnStatement=rem.replaceAll("\\$","\\$tuple/");
             query="for $tuple in "+sjoin+Utils.makeWhere(n,info)+" return "+returnStatement;
 
@@ -1136,7 +1137,18 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         }
 
         //execute query
-    System.out.println(query);
+    //System.out.println(query);
+
+    Writer writer = null;
+
+    try {
+        writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream("newquery.txt"), "utf-8"));
+        writer.write(query);
+    } catch (IOException ex) {
+      ex.printStackTrace();
+    } finally {
+       try {writer.close();} catch (Exception ex) {/*ignore*/}
+    }
     ANTLRInputStream inputq = new ANTLRInputStream(query); //"document(\"j_caesar.xml\")/TITLE");
 
     // create a lexer that feeds off of input CharStream
