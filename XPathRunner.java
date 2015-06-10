@@ -7,7 +7,21 @@ import java.io.*;
 public class XPathRunner{
     public static void main(String[] args) throws Exception {
     // create a CharStream that reads from standard input
-    ANTLRInputStream input = new ANTLRInputStream(System.in); //"document(\"j_caesar.xml\")/TITLE");
+    BufferedReader br = null ;
+    StringBuilder sb = new StringBuilder();
+    try {
+        br = new BufferedReader(new FileReader(args[0]));
+        String line = br.readLine();
+        while (line != null) {
+            sb.append(line);
+            sb.append("\n");
+            line = br.readLine();
+        }
+    } finally {
+        br.close();
+    }
+
+    ANTLRInputStream input = new ANTLRInputStream(sb.toString());
 
     // create a lexer that feeds off of input CharStream
     x_path_grammarLexer lexer = new x_path_grammarLexer(input);
