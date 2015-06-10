@@ -1134,7 +1134,7 @@ public class EvalVisitor extends x_path_grammarBaseVisitor<ArrayList<Node>>{
         else{
             //add dummy let clause to avoid infinite loop
             int n=st.pop();
-            query="let $pooja=\"n\" "+ctx.forJ().getText()+Utils.makeWhere(n,info)+" return "+returns;
+            query="let $pooja:=\"n\" "+Utils.makeFor(info,n)+Utils.makeWhere(n,info)+" return "+returns;
         }
 
         //execute query

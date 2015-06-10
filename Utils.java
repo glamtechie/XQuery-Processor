@@ -109,7 +109,7 @@ public class Utils {
         return (out.toString());
   }
 
-  public static String makefQuery(HashMap<Integer,TableNode> info, int n){
+  public static StringBuffer makeFor(HashMap<Integer,TableNode> info, int n){
     if(info.get(n).fors.isEmpty()){
       return null;
     }
@@ -125,11 +125,19 @@ public class Utils {
         fo.append(" in ");
         fo.append(info.get(n).fors.get(forstats[i]));
       }
+      return fo;
+  }
+}
+  public static String makefQuery(HashMap<Integer,TableNode> info, int n){
+    String[] forstats=Arrays.asList(info.get(n).fors.keySet().toArray()).toArray(new String[info.get(n).fors.keySet().toArray().length]);
+      StringBuffer fo=makeFor(info,n);
+      if(fo==null)
+        return null;
       fo.append(makeWhere(n,info));
       fo.append(makeReturn(forstats));
       return fo.toString();
     }
-  }
+
 
   public static String makeElem(String s){
     StringBuffer e=new StringBuffer();
@@ -139,6 +147,7 @@ public class Utils {
     e.append(" }</"+var+">");
     return e.toString();
   }
+
   public static String makeReturn(String[] vars){
     StringBuffer ret=new StringBuffer(" return ");
     ret.append("<tuple>{ ");
