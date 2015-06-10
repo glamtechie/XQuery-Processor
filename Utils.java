@@ -87,22 +87,26 @@ public class Utils {
 	return;
   }
 
-  public static void printNodes(ArrayList<Node> nodes) throws Exception{
+  public static String printNodes(ArrayList<Node> nodes) throws Exception{
+      StringBuffer buff=new StringBuffer();
         for (Node n:nodes){
             //System.out.println("printing..");
-            xmlPrint(n.getOwnerDocument());
+
+            buff.append(xmlPrint(n.getOwnerDocument()));
 
         }
 
+        return (buff.toString());
+
   }
 
-  public static final void xmlPrint(Document xml) throws Exception {
+  public static final String xmlPrint(Document xml) throws Exception {
     Transformer tf = TransformerFactory.newInstance().newTransformer();
         tf.setOutputProperty(OutputKeys.ENCODING, "UTF-8");
         tf.setOutputProperty(OutputKeys.INDENT, "yes");
         Writer out = new StringWriter();
         tf.transform(new DOMSource(xml), new StreamResult(out));
-        System.out.println(out.toString());
+        return (out.toString());
   }
 
   public static String makefQuery(HashMap<Integer,TableNode> info, int n){
